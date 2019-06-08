@@ -1,0 +1,72 @@
+\documentclass[]{standalone}
+
+\usepackage{circuitikz}
+
+\ctikzset{bipoles/galvanometer/height/.initial=.60}
+\ctikzset{bipoles/galvanometer/width/.initial=.60}
+
+\ctikzset{bipoles/galvanometer/arrow rotate/.initial=0,% <=new key
+rotation/.style={bipoles/galvanometer/arrow rotate=#1},% style for ease introduction in code
+}
+
+% code from pgfcircbipoles.sty
+\makeatletter
+\pgfcircdeclarebipole{}{\ctikzvalof{bipoles/galvanometer/height}}{galvanometer}{\ctikzvalof{bipoles/galvanometer/height}}{\ctikzvalof{bipoles/galvanometer/width}}{
+    \def\pgf@circ@temp{right}
+    \ifx\tikz@res@label@pos\pgf@circ@temp
+        \pgf@circ@res@step=-1.2\pgf@circ@res@up
+    \else
+        \def\pgf@circ@temp{below}
+        \ifx\tikz@res@label@pos\pgf@circ@temp
+            \pgf@circ@res@step=-1.2\pgf@circ@res@up
+        \else
+            \pgf@circ@res@step=1.2\pgf@circ@res@up
+        \fi
+    \fi
+
+    \pgfpathmoveto{\pgfpoint{\pgf@circ@res@left}{\pgf@circ@res@zero}}       
+    \pgfpointorigin \pgf@circ@res@other =  \pgf@x  \advance \pgf@circ@res@other by -\pgf@circ@res@up
+    \pgfpathlineto{\pgfpoint{\pgf@circ@res@other}{\pgf@circ@res@zero}}
+    \pgfusepath{draw}
+
+    \pgfsetlinewidth{\pgfkeysvalueof{/tikz/circuitikz/bipoles/thickness}\pgfstartlinewidth}
+
+        \pgfscope
+            \pgfpathcircle{\pgfpointorigin}{1.0\pgf@circ@res@up}
+            \pgfusepath{draw}       
+        \endpgfscope    
+
+    \pgftransformrotate{\ctikzvalof{bipoles/galvanometer/arrow rotate}}% <= magic line
+    \pgfsetlinewidth{\pgfstartlinewidth}
+
+    \pgfsetarrowsend{latex}
+    \pgfpathmoveto{\pgfpoint{0.7\pgf@circ@res@up}{\pgf@circ@res@zero}}
+    \pgfpathlineto{\pgfpoint{0.7\pgf@circ@res@down}{\pgf@circ@res@zero}}
+    \pgfusepath{draw}
+    \pgfsetarrowsend{}
+
+%    \pgfpathmoveto{\pgfpoint{-\pgf@circ@res@other}{\pgf@circ@res@zero}}
+%    \pgfpathlineto{\pgfpoint{\pgf@circ@res@right}{\pgf@circ@res@zero}}
+%    \pgfusepath{draw}
+
+    %% G for galvanometer
+    %\pgfnode{circle}{center}{\textbf{G}}{}{}
+}
+
+% As used in pgfcircpath.tex
+\def\pgf@circ@galvanometer@path#1{\pgf@circ@bipole@path{galvanometer}{#1}}
+\compattikzset{galvanometer/.style = {\circuitikzbasekey, /tikz/to path=\pgf@circ@galvanometer@path}}
+
+\makeatother
+
+\begin{document}
+
+\begin{circuitikz}
+    \draw (0,-0.1) to[sinusoidal voltage source] (0,2)
+    to[switch] (2,2);
+    \draw (3,2) node[transformer] {}
+    (0,-0.1) -- (2,-0.1);
+    \draw (4.05,-0.1) -- (6.05,-0.1) to[galvanometer,rotation=90] (6.05,2) -- (4.05,2);
+\end{circuitikz}
+
+\end{document}

@@ -1,0 +1,69 @@
+\documentclass[]{standalone}
+
+\usepackage{circuitikz}
+
+
+
+\ctikzset{bipoles/voltmeter/text rotate/.initial=0,% <=new key
+rotation/.style={bipoles/voltmeter/text rotate=#1},% style for ease introduction in code
+}
+
+% code from pgfcircbipoles.sty
+\makeatletter
+\pgfcircdeclarebipole{}{\ctikzvalof{bipoles/voltmeter/height}}{voltmeter}{\ctikzvalof{bipoles/voltmeter/height}}{\ctikzvalof{bipoles/voltmeter/width}}{
+    \def\pgf@circ@temp{right}
+    \ifx\tikz@res@label@pos\pgf@circ@temp
+        \pgf@circ@res@step=-1.2\pgf@circ@res@up
+    \else
+        \def\pgf@circ@temp{below}
+        \ifx\tikz@res@label@pos\pgf@circ@temp
+            \pgf@circ@res@step=-1.2\pgf@circ@res@up
+        \else
+            \pgf@circ@res@step=1.2\pgf@circ@res@up
+        \fi
+    \fi
+
+    \pgfpathmoveto{\pgfpoint{\pgf@circ@res@left}{\pgf@circ@res@zero}}       
+    \pgfpointorigin \pgf@circ@res@other =  \pgf@x  \advance \pgf@circ@res@other by -\pgf@circ@res@up
+    \pgfpathlineto{\pgfpoint{\pgf@circ@res@other}{\pgf@circ@res@zero}}
+    \pgfusepath{draw}
+
+    \pgfsetlinewidth{\pgfkeysvalueof{/tikz/circuitikz/bipoles/thickness}\pgfstartlinewidth}
+
+        \pgfscope
+            \pgfpathcircle{\pgfpointorigin}{1.0\pgf@circ@res@up}
+            \pgfusepath{draw}       
+        \endpgfscope    
+
+    \pgftransformrotate{\ctikzvalof{bipoles/voltmeter/text rotate}}% <= magic line
+    \pgfsetlinewidth{\pgfstartlinewidth}
+
+    \pgfsetarrowsend{latex}
+    \pgfpathmoveto{\pgfpoint{\pgf@circ@res@other}{\pgf@circ@res@down}}
+    \pgfpathlineto{\pgfpoint{-\pgf@circ@res@other}{\pgf@circ@res@up}}
+    \pgfusepath{draw}
+    \pgfsetarrowsend{}
+
+
+    \pgfpathmoveto{\pgfpoint{-\pgf@circ@res@other}{\pgf@circ@res@zero}}
+    \pgfpathlineto{\pgfpoint{\pgf@circ@res@right}{\pgf@circ@res@zero}}
+    \pgfusepath{draw}
+
+
+    \pgfnode{circle}{center}{\textbf{V}}{}{}
+}
+\makeatother
+
+
+
+\begin{document}
+
+\begin{circuitikz}
+    \draw (0,-0.1) to[sinusoidal voltage source] (0,2)
+    to[switch] (2,2);
+    \draw (3,2) node[transformer] {}
+    (0,-0.1) -- (2,-0.1);
+    \draw (4.05,-0.1) -- (6.05,-0.1) to[voltmeter,rotation=270] (6.05,2) -- (4.05,2);
+\end{circuitikz}
+
+\end{document}

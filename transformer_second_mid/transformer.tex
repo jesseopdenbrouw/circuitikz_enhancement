@@ -1,0 +1,81 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[left=1in,right=1in]{geometry}
+\usepackage[americaninductor]{circuitikz}
+
+\ctikzset{bipoles/thickness/.initial=1}
+%\ctikzset{tripoles/thickness/.initial=0.5}
+%\ctikzset{quadpoles/thickness/.initial=0.5}
+
+\ctikzset{quadpoles/transformer secondary mid/width/.initial=1.5}
+\ctikzset{quadpoles/transformer secondary mid/width1/.initial=.4}
+\ctikzset{quadpoles/transformer secondary mid/height/.initial=2.0}
+\ctikzset{quadpoles/transformer secondary mid/height1/.initial=.8}
+
+%\ctikzset{bipoles/americaninductor/coils/.initial=4}
+%\ctikzset{bipoles/americaninductor/coil height/.initial=0.15}
+%
+%\ctikzset{bipoles/cuteinductor/height/.initial=.3}
+%\ctikzset{bipoles/cuteinductor/lower coil height/.initial=.15}
+%\ctikzset{bipoles/cuteinductor/width/.initial=.6}
+%\ctikzset{bipoles/cuteinductor/coils/.initial=4}
+%\ctikzset{bipoles/cuteinductor/coil aspect/.initial=.5}%percentage of inductor width, which is covered by lower coil
+
+\makeatletter
+
+%%%\newcommand*\pgfdeclareanchoralias[3]{%
+%%%    \expandafter\def\csname pgf@anchor@#1@#3\expandafter\endcsname
+%%%            \expandafter{\csname pgf@anchor@#1@#2\endcsname}}
+
+\pgfcircdeclarequadpole{transformer secondary mid}{
+%%%	\pgfdeclareanchoralias{transformer}{east}{BM}
+	\pgfpathmoveto{\pgfpoint{\pgf@circ@res@right}{0pt}}%
+    \edef\pgf@circ@temp{\ctikzvalof{inductor}}%
+    \def\pgf@temp{european}%
+    \ifx\pgf@temp\pgf@circ@temp% european inductor
+		\pgfpathlineto{\pgfpoint{\stretto\pgf@circ@res@right}{0pt}}%
+    \else%
+        \def\pgf@temp{cute}
+        \ifx\pgf@temp\pgf@circ@temp% cute inductor
+			\pgfmathisodd{\ctikzvalof{bipoles/cuteinductor/coils}}%
+			\ifnum\pgfmathresult=1\relax% odd number of coils
+				%% Reverse engineered function for matching the coil:
+				%% -1.66 \times (coil) height + 1.0124
+				\pgfpathlineto{\pgfpoint{(-1.66*\ctikzvalof{bipoles/cuteinductor/height}+1.0124)*\stretto\pgf@circ@res@right}{0pt}}%
+			\else%
+				\pgfpathlineto{\pgfpoint{1.25*\stretto\pgf@circ@res@right}{0pt}}%
+			\fi%
+        \else% american inductor
+			\pgfmathisodd{\ctikzvalof{bipoles/americaninductor/coils}}%
+			\ifnum\pgfmathresult=1\relax% odd number of coils
+				%% Reverse engineered function for matching the coil:
+				%% -3.22 \times coil height + 1.004
+				\pgfpathlineto{\pgfpoint{(-3.22*\ctikzvalof{bipoles/americaninductor/coil height}+1.004)*\stretto\pgf@circ@res@right}{0pt}}%
+			\else%
+				\pgfpathlineto{\pgfpoint{\stretto\pgf@circ@res@right}{0pt}}%
+			\fi%
+        \fi%
+    \fi%
+
+	\pgfusepath{draw}%
+	\pgf@circ@drawtransformerbasicbody%
+}{\anchor{BM}{\northwest\pgf@x=-\pgf@x\pgf@y=0pt}\pgf@circ@drawtransformerbasicanchor}
+\makeatother
+
+\begin{document}
+
+\begin{tikzpicture}[line width=1pt]
+\draw (0,0) node[transformer secondary mid] (T) {}
+\foreach \myanchor in {A1,A2,B1,B2} {
+	(T.\myanchor) node[] {\myanchor}
+}
+(T.base) node{K}
+(T.inner dot A1) node[circ]{}
+(T.inner dot B2) node[circ]{}
+(T.center) node[] {}
+(T.BM) node[circ] {}
+(T.BM) node[red] {BM}
+;
+\end{tikzpicture}
+
+\end{document}
