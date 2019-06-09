@@ -4,6 +4,8 @@
 %%
 %% CIRCUITIKZ - TUBES: DIODE, TRIODE, TETRODE and PENTODE
 %%
+%% (c)2019, J.E.J. op den Brouw <J.E.J.opdenBrouw@hhs.n>
+%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%
@@ -81,7 +83,7 @@
 
 
 %%
-%% Tube filament behaves like a sort of style
+%% Tube filament and nocathode behave like a sort of style
 %%
 \makeatletter
 \newif\ifpgf@circuit@tubes@filament\pgf@circuit@tubes@filamentfalse
@@ -90,15 +92,8 @@
 \newif\ifpgf@circuit@tubes@nocathode\pgf@circuit@tubes@nocathodefalse
 \pgfkeys{/tikz/nocathode/.add code={}{\pgf@circuit@tubes@nocathodetrue}}
 \ctikzset{tubes/nocathode/.add code={}{\pgf@circuit@tubes@nocathodetrue}}
-\makeatother
 
-%%
-%% This is the Circuitikz element for a triode filament.
-%% Basic anchors: grid, anode, cathode, text
-%%
-\makeatletter
-
-% Draw tube
+% Draw tube outline
 \def\pgf@circ@tubes@drawtube{%
 			\pgfmathparse{(\pgf@circ@res@up-\pgf@circ@res@right)}
 			\pgfpathmoveto{\pgfpoint{-\pgf@circ@res@right}{0pt}}
@@ -113,7 +108,7 @@
 %% The diode (tube), triode, tetrode and pentode only differ in the
 %% number of grids. So we construct a generic declare function in
 %% which we can put code for the grid anchors and grid drawing code
-%% \pgfcircdeclaretube{tube name}{extra anchors}{grid drawing code}
+%% \pgfcircdeclaretube{tube name}{grid anchors}{grid drawing code}
 \long\def\pgfcircdeclaretube#1#2#3{%
 	\pgfdeclareshape{#1}{
 	    \anchor{center}{
@@ -166,12 +161,14 @@
 			\northwest
 			\pgf@x=0pt
 		}
-		\anchor{cathode}{%
-	        \northwest
-	        \pgf@y=-\pgf@y
-			\pgf@x=\ctikzvalof{tubes/#1/cathode width}\pgf@x
-		}
-
+		\ifpgf@circuit@tubes@nocathode
+		\else
+			\anchor{cathode}{%
+		        \northwest
+		        \pgf@y=-\pgf@y
+				\pgf@x=\ctikzvalof{tubes/#1/cathode width}\pgf@x
+			}
+		\fi
 		% Extra anchors
 		#2
 

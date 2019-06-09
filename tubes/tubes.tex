@@ -1,0 +1,92 @@
+\documentclass[a4paper,titlepage]{article}
+
+
+\usepackage{a4wide} %smaller borders
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\parindent=0pt
+\parskip=4pt plus 6pt minus 2pt
+\usepackage[siunitx, RPvoltages]{circuitikz}
+\usepackage{ctikzmanutils}
+
+
+\def\Circuitikz{CircuiTi\emph{k}Z}
+
+\author{Jesse op den Brouw\thanks{The Hague University of Applied Sciences (THUAS), \texttt{J.E.J.opdenBrouw@hhs.nl}}}
+\title{\Circuitikz\ -- Electronic Tubes}
+\date{\today}
+
+
+\input{tubes-circuitikz.tex}
+
+\begin{document}
+
+
+
+
+\begin{groupdesc}
+    \circuitdesc*{magnetron}{Magnetron}{}( anode/-90/0.2, cathode1/135/0.2,
+    cathode2/45/0.2, left/180/0.2, right/0/0.2, top/90/0.4 )
+\end{groupdesc}
+
+\begin{groupdesc}
+	\circuitdesc*{diodetube}{Tube Diode}{} ( anode/90/0.2, cathode/-90/0.2 )
+	\circuitdesc*{triode}{Triode}{} ( anode/90/0.2, cathode/-90/0.2, grid/180/0.2 )
+	\circuitdesc*{tetrode}{Tetrode}{} ( anode/90/0.2, cathode/-90/0.2, grid/180/0.2,screen/180/0.2 )
+	\circuitdesc*{pentode}{Pentode}{} ( anode/90/0.2, cathode/-90/0.2, grid/180/0.2,screen/180/0.2,suppressor/180/0.2 )
+\end{groupdesc}
+
+Normally, the filament is not drawn and there are no anchors present. If you want a filament, put the \verb|filament| option in the node description:
+
+\begin{groupdesc}
+	\circuitdesc*{diodetube,filament}{Tube Diode}{} ( anode/90/0.2, cathode/-90/0.2 )
+\end{groupdesc}
+
+Sometimes, you don't want the cathode to be drawn (but you do want the filament). Use the \verb|nocathode| option in the node description:
+
+\begin{groupdesc}
+	\circuitdesc*{diodetube,filament,nocathode}{Tube Diode}{} ( anode/90/0.2, cathode/-90/0.2 )
+\end{groupdesc}
+
+Example triode amplifier:
+
+\begin{lstlisting}
+\draw (0,0) node (start) {}
+            	to[sV=$V_i$] ++(0,2+\ctikzvalof{tubes/triode/height})
+            	to[C=$C_i$] ++(2,0) node (Rg) {}
+				to[R=$R_g$] (Rg |- start)
+(Rg)			to[short,*-] ++(1,0)
+				node[triode,anchor=grid] (Tri) {} ++(2,0)
+(Tri.cathode)	to[R=$R_c$,-*] (Tri.cathode |- start)
+(Tri.anode)		to [R=$R_a$] ++(0,2)
+				to [short] ++(3.5,0) node(Vatop) {}
+				to [V<=$V_a$] (Vatop |- start)
+				to [short] (start)
+(Tri.anode) ++(0,0.2) to[C=$C_o$,*-o] ++(2,0)
+(Tri.cathode) ++(0,-0.2) to[short,*-] ++(1.5,0) node(Cctop) {}
+				to[C=$C_c$,-*] (start -| Cctop)
+;
+\draw[red,thin] (Tri.north west) rectangle (Tri.south east);
+\draw[blue] (Tri.east) node[right] {$\frac{1}{2}$ECC83};
+\end{lstlisting}
+\begin{tikzpicture}
+\draw (0,0) node (start) {}
+            	to[sV=$V_i$] ++(0,2+\ctikzvalof{tubes/triode/height})
+            	to[C=$C_i$] ++(2,0) node (Rg) {}
+				to[R=$R_g$] (Rg |- start)
+(Rg)			to[short,*-] ++(1,0)
+				node[triode,anchor=grid] (Tri) {} ++(2,0)
+(Tri.cathode)	to[R=$R_c$,-*] (Tri.cathode |- start)
+(Tri.anode)		to [R=$R_a$] ++(0,2)
+				to [short] ++(3.5,0) node(Vatop) {}
+				to [V<=$V_a$] (Vatop |- start)
+				to [short] (start)
+(Tri.anode) ++(0,0.2) to[C=$C_o$,*-o] ++(2,0)
+(Tri.cathode) ++(0,-0.2) to[short,*-] ++(1.5,0) node(Cctop) {}
+				to[C=$C_c$,-*] (start -| Cctop)
+;
+\draw[red,thin] (Tri.north west) rectangle (Tri.south east);
+\draw[blue] (Tri.east) node[right] {$\frac{1}{2}$ECC83};
+\end{tikzpicture}
+
+\end{document}

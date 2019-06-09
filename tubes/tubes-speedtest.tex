@@ -1,0 +1,55 @@
+\documentclass[a4paper,titlepage]{article}
+
+
+\usepackage{a4wide} %smaller borders
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\parindent=0pt
+\parskip=4pt plus 6pt minus 2pt
+\usepackage[siunitx, RPvoltages]{circuitikz}
+\usepackage{ctikzmanutils}
+
+\usepgflibrary{profiler}
+\pgfprofilenewforenvironment{tikzpicture}
+
+
+\input{tubes-circuitikz.tex}
+
+
+\ctikzset{tripoles/thickness=1}
+\ctikzset{bipoles/thickness=1}
+
+\begin{document}
+
+\foreach \i in {1,...,100} {
+
+%\begin{tikzpicture}[line width=1]
+%\draw (0,0) node (start) {}
+%            	to[sV=$V_i$] ++(0,2+\ctikzvalof{tubes/triode/height})
+%            	to[C=$C_i$] ++(2,0)
+%				node[triode,anchor=grid,filament] (Tri) {} ++(2,0)
+%(Tri.cathode)	to[R=$R_c$,-*] (Tri.cathode |- start)
+%(Tri.anode)		to [R=$R_a$] ++(0,2)
+%				to [short] ++(3.5,0) node(Vatop) {}
+%				to [V<=$V_a$] (Vatop |- start)
+%				to [short] (start)
+%(Tri.anode) ++(0,0.2) to[C=$C_o$,*-o] ++(2,0)
+%(Tri.cathode) ++(0,-0.2) to[short,*-] ++(1.5,0) node(Cctop) {}
+%				to[C=$C_c$,-*] (start -| Cctop)
+%;
+%
+%\draw[red,thin] (Tri.north west) rectangle (Tri.south east);
+%\draw[blue] (Tri.east) node[right] {$\frac{1}{2}$ECC83};
+%\end{tikzpicture}
+
+\begin{tikzpicture}
+\draw (0,0) node[pentode,filament,fill=pink!30] {};
+\draw (2,0) node[pentode,filament,fill=pink!30] {};
+\draw (4,0) node[pentode,filament,fill=pink!30] {};
+\draw (6,0) node[pentode,filament,fill=pink!30] {};
+\draw (8,0) node[pentode,filament,fill=pink!30] {};
+\draw (10,0) node[pentode,filament,fill=pink!30] {};
+\end{tikzpicture}
+}
+
+\end{document}

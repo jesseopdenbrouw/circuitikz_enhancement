@@ -22,7 +22,7 @@
 \begin{document}
 
 
-This document describes the use of a standard triode tube in the schematic drawing extension \Circuitikz. It is highly configurable and has a large number of anchors.
+This document describes the use of a standard triode tube in the schematic drawing extension \Circuitikz. It is highly configurable and has anode, cathode and grid anchors.
 
 \subsubsection*{Basic usage}
 
@@ -44,13 +44,13 @@ You can draw the filament if you like:
 
 \subsubsection*{Triode anchors}
 
-The triode has three basic anchors and a text (or label) anchor: anode, cathode grid and text. The can be accessed by \emph{nodename}.\texttt{anode}, \emph{nodename}.\texttt{cathode}, \emph{nodename}.\texttt{grid} and \emph{nodename}.\texttt{text}. The filament has no anchors. The position of the anchors is shown below.
+The triode has three basic anchors: anode, cathode and grid. The can be accessed by \emph{nodename}.\texttt{anode}, \emph{nodename}.\texttt{cathode}, and \emph{nodename}.\texttt{grid}. The filament has no anchors. The position of the anchors is shown below.
 
 \begin{LTXexample}[varwidth]
 \begin{tikzpicture}
 \draw (0,0) node[triode] (Tri) {}
 \foreach \tria/\trip in {grid/left, anode/above,
-                         cathode/below, text/right}
+                         cathode/below}
 {
    (Tri.\tria) node[circ] {} node[\trip] {\tria}
 }
@@ -73,23 +73,6 @@ Below is a figure that shows all geographical anchors (scaled by 2, filled with 
 ;
 \end{tikzpicture}
 
-The following parameters can be altered:
-
-\begin{lstlisting}[basicstyle=\small\ttfamily]
-\ctikzset{tubes/triode/tube width/.initial=0.40}            % radius of tube circle
-\ctikzset{tubes/triode/anode distance/.initial=0.20}        % distance from grid
-\ctikzset{tubes/triode/anode width/.initial=0.20}           % width of (half) an anode/plate
-\ctikzset{tubes/triode/cathode distance/.initial=0.20}      % distance from grid
-\ctikzset{tubes/triode/cathode width/.initial=0.20}         % width of (half) an cathode
-\ctikzset{tubes/triode/cathode corners/.initial=0.06}       % corners of the cathode wire
-\ctikzset{tubes/triode/cathode right extend/.initial=0.075} % extension at the right side
-\ctikzset{tubes/triode/grid protrusion/.initial=0.10}       % distance in tube circle
-\ctikzset{tubes/triode/grid dashes/.initial=5}              % number of grid dashes
-\ctikzset{tubes/triode/filament distance/.initial=0.05}     % distance from cathode
-\ctikzset{tubes/triode/filament angle/.initial=15}          % Angle from centerpoint
-\end{lstlisting}
-
-
 \bigskip
 
 Sample network:
@@ -99,7 +82,7 @@ Sample network:
 
 \begin{tikzpicture}[line width=1]
 \draw (0,0) node (start) {}
-            	to[sV=$V_i$] ++(0,2+\ctikzvalof{tubes/height})
+            	to[sV=$V_i$] ++(0,2+\ctikzvalof{tubes/triode/height})
             	to[C=$C_i$] ++(2,0)
 				node[triode,anchor=grid,filament] (Tri) {} ++(2,0)
 (Tri.cathode)	to[R=$R_c$,-*] (Tri.cathode |- start)
@@ -113,7 +96,13 @@ Sample network:
 ;
 
 \draw[red,thin] (Tri.north west) rectangle (Tri.south east);
-\draw[blue] (Tri.text) node[right] {$\frac{1}{2}$ECC83};
+\draw[blue] (Tri.east) node[right] {$\frac{1}{2}$ECC83};
 \end{tikzpicture}
 
+\begin{tikzpicture}[line width=1]
+\draw (0,0) node[diodetube,nocathode,filament] {};
+\draw (4,0) node[tetrode] (Tet) {};
+\draw (8,0) node[pentode,blue!70,fill=pink!30] (Pen) {};
+\draw (Pen.grid) node[circ] {} (Pen.screen) node[circ] {} (Pen.suppressor) node[circ] {};
+\end{tikzpicture}
 \end{document}
