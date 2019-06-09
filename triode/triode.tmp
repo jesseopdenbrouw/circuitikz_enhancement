@@ -1,9 +1,0 @@
-\begin{tikzpicture}
-\draw (0,0) node[triode] (Tri) {}
-\foreach \tria/\trip in {grid/left, anode/above,
-                         cathode/below, text/right}
-{
-   (Tri.\tria) node[circ] {} node[\trip] {\tria}
-}
-;
-\end{tikzpicture}

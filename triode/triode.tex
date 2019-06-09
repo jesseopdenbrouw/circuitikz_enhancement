@@ -60,7 +60,9 @@ The triode has three basic anchors and a text (or label) anchor: anode, cathode 
 
 Below is a figure that shows all geographical anchors (scaled by 2, filled with pink, bounding box).
 
-\begin{tikzpicture}[line width=1pt,font=\sffamily\footnotesize]
+\ctikzset{tubes/triode/tube width/.initial=0.50}            % radius of tube circle
+
+\begin{tikzpicture}
 \draw (0,0) node[triode,scale=2,filament,fill=pink!50] (Tri) {}; % center
 \draw[red] (Tri.north west) rectangle (Tri.south east);
 
@@ -74,7 +76,6 @@ Below is a figure that shows all geographical anchors (scaled by 2, filled with 
 The following parameters can be altered:
 
 \begin{lstlisting}[basicstyle=\small\ttfamily]
-\ctikzset{tubes/triode/thickness/.initial=1}                % relative line thickness
 \ctikzset{tubes/triode/tube width/.initial=0.40}            % radius of tube circle
 \ctikzset{tubes/triode/anode distance/.initial=0.20}        % distance from grid
 \ctikzset{tubes/triode/anode width/.initial=0.20}           % width of (half) an anode/plate
@@ -93,20 +94,22 @@ The following parameters can be altered:
 
 Sample network:
 
+\ctikzset{tripoles/thickness=1}
 \ctikzset{bipoles/thickness=1}
 
 \begin{tikzpicture}[line width=1]
-\draw (0,0) 	to[sV=$V_i$] ++(0,2.75)
+\draw (0,0) node (start) {}
+            	to[sV=$V_i$] ++(0,2+\ctikzvalof{tubes/height})
             	to[C=$C_i$] ++(2,0)
-				node[triode,anchor=grid] (Tri) {} ++(2,0)
-(Tri.cathode)	to[R=$R_c$,-*] ++(0,-2) node(Rcbot) {}
+				node[triode,anchor=grid,filament] (Tri) {} ++(2,0)
+(Tri.cathode)	to[R=$R_c$,-*] (Tri.cathode |- start)
 (Tri.anode)		to [R=$R_a$] ++(0,2)
 				to [short] ++(3.5,0) node(Vatop) {}
-				to [V<=$V_a$] (Rcbot -| Vatop)
-				to [short] (0,0)
+				to [V<=$V_a$] (Vatop |- start)
+				to [short] (start)
 (Tri.anode) ++(0,0.2) to[C=$C_o$,*-o] ++(2,0)
 (Tri.cathode) ++(0,-0.2) to[short,*-] ++(1.5,0) node(Cctop) {}
-				to[C=$C_c$,-*] (Rcbot -| Cctop)
+				to[C=$C_c$,-*] (start -| Cctop)
 ;
 
 \draw[red,thin] (Tri.north west) rectangle (Tri.south east);

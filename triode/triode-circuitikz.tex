@@ -11,27 +11,26 @@
 \ctikzset{tubes/width/.initial=1}                           % relative width
 \ctikzset{tubes/height/.initial=1}                          % relative height
 
-\ctikzset{tubes/triode/thickness/.initial=1}                % relative line thickness
-\ctikzset{tubes/triode/tube width/.initial=0.40}            % radius of tube circle
-\ctikzset{tubes/triode/anode distance/.initial=0.20}        % distance from grid
-\ctikzset{tubes/triode/anode width/.initial=0.20}           % width of (half) an anode/plate
-\ctikzset{tubes/triode/cathode distance/.initial=0.20}      % distance from grid
-\ctikzset{tubes/triode/cathode width/.initial=0.20}         % width of (half) an cathode
+\ctikzset{tubes/triode/tube radius/.initial=0.40}           % radius of tube circle
+\ctikzset{tubes/triode/anode distance/.initial=0.30}        % distance from grid
+\ctikzset{tubes/triode/anode width/.initial=0.40}           % width of an anode/plate
+\ctikzset{tubes/triode/cathode distance/.initial=0.30}      % distance from grid
+\ctikzset{tubes/triode/cathode width/.initial=0.40}         % width of an cathode
 \ctikzset{tubes/triode/cathode corners/.initial=0.06}       % corners of the cathode wire
 \ctikzset{tubes/triode/cathode right extend/.initial=0.075} % extension at the right side
-\ctikzset{tubes/triode/grid protrusion/.initial=0.10}       % distance in tube circle
+\ctikzset{tubes/triode/grid protrusion/.initial=0.25}       % distance from center
 \ctikzset{tubes/triode/grid dashes/.initial=5}              % number of grid dashes
-\ctikzset{tubes/triode/filament distance/.initial=0.05}     % distance from cathode
+\ctikzset{tubes/triode/filament distance/.initial=0.1}     	% distance from cathode
 \ctikzset{tubes/triode/filament angle/.initial=15}          % Angle from centerpoint
 
 
 %%
-%% Triode filament behaves like a sort of style
+%% Tube filament behaves like a sort of style
 %%
 \makeatletter
-\newif\ifpgf@circuit@triode@filament
-\pgfkeys{/tikz/filament/.add code={}{\pgf@circuit@triode@filamenttrue}}
-\ctikzset{tubes/triode/filament/.add code={}{\pgf@circuit@triode@filamenttrue}}
+\newif\ifpgf@circuit@tubes@filament
+\pgfkeys{/tikz/filament/.add code={}{\pgf@circuit@tubes@filamenttrue}}
+\ctikzset{tubes/triode/filament/.add code={}{\pgf@circuit@tubes@filamenttrue}}
 \makeatother
 
 %%
@@ -39,21 +38,30 @@
 %% Basic anchors: grid, anode, cathode, text
 %%
 \makeatletter
+
+% Draw tube
+\def\pgf@circ@tubes@drawtube{%
+			\pgfmathparse{(\pgf@circ@res@up-\pgf@circ@res@right)}
+			\pgfpathmoveto{\pgfpoint{-\pgf@circ@res@right}{0pt}}
+			\@tempdima=\pgfmathresult pt
+			\pgfpathlineto{\pgfpoint{-\pgf@circ@res@right}{\@tempdima}}
+			\pgfpatharc{180}{0}{\pgf@circ@res@right}
+			\pgfpathlineto{\pgfpoint{\pgf@circ@res@right}{-\@tempdima}}
+			\pgfpatharc{180}{0}{-\pgf@circ@res@right}
+			\pgfpathclose
+}
+
 \pgfdeclareshape{triode}{
     \anchor{center}{
         \pgfpointorigin
     }
     \savedanchor\northwest{%
-		\ifdim\ctikzvalof{tubes/width}\pgf@circ@Rlen>\ctikzvalof{tubes/height}\pgf@circ@Rlen\relax
-			\pgf@circ@res@up=\ctikzvalof{tubes/width}\pgf@circ@Rlen
-		\else
-			\pgf@circ@res@up=\ctikzvalof{tubes/height}\pgf@circ@Rlen
-		\fi
+		\pgf@circ@res@up=\ctikzvalof{tubes/height}\pgf@circ@Rlen
+		\pgf@circ@res@right=\ctikzvalof{tubes/width}\pgf@circ@Rlen
 		% x and y should be half the Rlen
         \pgf@y=\pgf@circ@res@up
         \pgf@y=.5\pgf@y
-        \pgf@x=-\pgf@circ@res@up
-        \pgf@x=-\pgf@circ@res@up
+        \pgf@x=-\pgf@circ@res@right
         \pgf@x=.5\pgf@x
     }
 	\anchor{north} {%
@@ -101,7 +109,6 @@
 	\anchor{cathode}{%
         \northwest
         \pgf@y=-\pgf@y
-		\pgf@x=2\pgf@x
 		\pgf@x=\ctikzvalof{tubes/triode/cathode width}\pgf@x
 	}
     \anchor{text}{%
@@ -111,46 +118,46 @@
     }
 	\backgroundpath{
 		\pgfscope
-			\ifdim\ctikzvalof{tubes/width}\pgf@circ@Rlen>\ctikzvalof{tubes/height}\pgf@circ@Rlen\relax
-				\pgf@circ@res@up=\ctikzvalof{tubes/width}\pgf@circ@Rlen
-			\else
-				\pgf@circ@res@up=\ctikzvalof{tubes/height}\pgf@circ@Rlen
-			\fi
-			\pgfsetlinewidth{\ctikzvalof{tubes/triode/thickness}\pgflinewidth}
+			% Line width for tripoles
+			\pgfsetlinewidth{\ctikzvalof{tripoles/thickness}\pgflinewidth}
+
+			% Setup to draw tube
+			\pgf@circ@res@up=\ctikzvalof{tubes/height}\pgf@circ@Rlen
+			\pgf@circ@res@right=\ctikzvalof{tubes/width}\pgf@circ@Rlen
+			\pgf@circ@res@up=\ctikzvalof{tubes/triode/tube radius}\pgf@circ@res@up
+			\pgf@circ@res@right=\ctikzvalof{tubes/triode/tube radius}\pgf@circ@res@right
 
 			% Tube fill color (if any)
 			\ifx\tikz@fillcolor\pgfutil@empty
 			\else
 				\pgfscope
 					\pgfsetfillcolor{\tikz@fillcolor}
-					\pgfpathmoveto{\pgfpointorigin}
-					\pgfpathcircle{\pgfpointorigin}{\ctikzvalof{tubes/triode/tube width}\pgf@circ@res@up}
+					\pgf@circ@tubes@drawtube
 					\pgfusepath{fill}
 				\endpgfscope
     		\fi
 
-			% Tube (circle)
-			\pgfpathmoveto{\pgfpointorigin}
-			\pgfpathcircle{\pgfpointorigin}{\ctikzvalof{tubes/triode/tube width}\pgf@circ@res@up}
+			% Tube
+			\pgf@circ@tubes@drawtube
 
-			% Anode (or plate)
-			\pgfpathmoveto{\pgfpoint{0pt}{0.5\pgf@circ@res@up}} % north
-			\pgfpathlineto{\pgfpoint{0pt}{\ctikzvalof{tubes/triode/anode distance}\pgf@circ@res@up}}
-			\pgfpathmoveto{\pgfpoint{-\ctikzvalof{tubes/triode/anode width}\pgf@circ@res@up}{\ctikzvalof{tubes/triode/anode distance}\pgf@circ@res@up}}
-			\pgfpathlineto{\pgfpoint{\ctikzvalof{tubes/triode/anode width}\pgf@circ@res@up}{\ctikzvalof{tubes/triode/anode distance}\pgf@circ@res@up}}
+			% Setup to draw filament, anode and cathode
+			\pgf@circ@res@up=\ctikzvalof{tubes/height}\pgf@circ@Rlen
+			\pgf@circ@res@right=\ctikzvalof{tubes/width}\pgf@circ@Rlen
+			\pgf@circ@res@up=0.5\pgf@circ@res@up
+			\pgf@circ@res@right=0.5\pgf@circ@res@right
 
 			% Grid protrusion
-			\pgfpathmoveto{\pgfpoint{-.50\pgf@circ@res@up}{0pt}}
-			\pgfmathqparse{-\ctikzvalof{tubes/triode/tube width}\pgf@circ@res@up+\ctikzvalof{tubes/triode/grid protrusion}\pgf@circ@res@up}
-			\pgfpathlineto{\pgfpoint{\pgfmathresult pt}{0pt}}
+			\pgfpathmoveto{\pgfpoint{-\pgf@circ@res@right}{0pt}}
+			\pgfmathqparse{-\ctikzvalof{tubes/triode/tube radius}\pgf@circ@res@right-\ctikzvalof{tubes/triode/grid protrusion}\pgf@circ@res@right}
+			\pgf@xa=\pgfmathresult pt
+			\pgfpathlineto{\pgfpoint{\pgf@xa}{0pt}}
 
 			% Grid dashes: calculations
-			\pgf@xa=\pgfmathresult pt
-			\pgf@xb=\ctikzvalof{tubes/triode/tube width}\pgf@circ@res@up
+			\pgf@xb=2\pgf@circ@res@right
+			\pgf@circ@res@step=\ctikzvalof{tubes/triode/tube radius}\pgf@xb
 			\@tempcnta=\ctikzvalof{tubes/triode/grid dashes}  % dashes*2+1
 			\multiply\@tempcnta by 2\relax
 			\advance\@tempcnta by 1\relax
-			\pgf@circ@res@step=\pgf@xb % calculate step
 			\advance\pgf@circ@res@step by -\pgf@xa
 			\divide\pgf@circ@res@step by \@tempcnta
 			% Grid dashes: draw
@@ -166,31 +173,34 @@
 			\repeat
 
 			% Filament (is not drawn by default)
-			\ifpgf@circuit@triode@filament
+			\ifpgf@circuit@tubes@filament
 				\pgf@circ@res@temp=-\ctikzvalof{tubes/triode/cathode distance}\pgf@circ@res@up
 				\advance\pgf@circ@res@temp by -\ctikzvalof{tubes/triode/filament distance}\pgf@circ@res@up
-				\pgfmathparse{(\ctikzvalof{tubes/triode/tube width}*sin(\ctikzvalof{tubes/triode/filament angle})}
-				\pgfextra{\pgfmathresult}
-				\pgf@xa=\pgfmathresult\pgf@circ@res@up
-				\pgfmathparse{\ctikzvalof{tubes/triode/tube width}*cos(\ctikzvalof{tubes/triode/filament angle})}
-				\pgfextra{\pgfmathresult}
+				\pgfmathparse{(\ctikzvalof{tubes/triode/tube radius}*sin(\ctikzvalof{tubes/triode/filament angle})}
+				\pgf@xa=\pgfmathresult\pgf@circ@res@right
+				\pgfmathparse{\ctikzvalof{tubes/triode/tube radius}+\ctikzvalof{tubes/triode/tube radius}*cos(\ctikzvalof{tubes/triode/filament angle}}
 				\pgf@ya=\pgfmathresult\pgf@circ@res@up
 				\pgfpathmoveto{\pgfpoint{0pt}{\pgf@circ@res@temp}}
 				\pgfpathlineto{\pgfpoint{-\pgf@xa}{-\pgf@ya}}
-				\pgfpathlineto{\pgfpoint{-\pgf@xa}{-0.5\pgf@circ@res@up}}
-				\pgf@circuit@triode@filamentfalse
+				\pgfpathlineto{\pgfpoint{-\pgf@xa}{-\pgf@circ@res@up}}
 				\pgfpathmoveto{\pgfpoint{0pt}{\pgf@circ@res@temp}}
 				\pgfpathlineto{\pgfpoint{\pgf@xa}{-\pgf@ya}}
-				\pgfpathlineto{\pgfpoint{\pgf@xa}{-0.5\pgf@circ@res@up}}
-				\pgf@circuit@triode@filamentfalse
+				\pgfpathlineto{\pgfpoint{\pgf@xa}{-\pgf@circ@res@up}}
+				\pgf@circuit@tubes@filamentfalse
 			\fi
+
+			% Anode (or plate)
+			\pgfpathmoveto{\pgfpoint{0pt}{\pgf@circ@res@up}} % north
+			\pgfpathlineto{\pgfpoint{0pt}{\ctikzvalof{tubes/triode/anode distance}\pgf@circ@res@up}}
+			\pgfpathmoveto{\pgfpoint{-\ctikzvalof{tubes/triode/anode width}\pgf@circ@res@right}{\ctikzvalof{tubes/triode/anode distance}\pgf@circ@res@up}}
+			\pgfpathlineto{\pgfpoint{\ctikzvalof{tubes/triode/anode width}\pgf@circ@res@right}{\ctikzvalof{tubes/triode/anode distance}\pgf@circ@res@up}}
 
 			% Cathode
 			\pgfsetcornersarced{\pgfpoint{\ctikzvalof{tubes/triode/cathode corners}\pgf@circ@res@up}{\ctikzvalof{tubes/triode/cathode corners}\pgf@circ@res@up}}
-			\pgfpathmoveto{\pgfpoint{-\ctikzvalof{tubes/triode/cathode width}\pgf@circ@res@up}{-.5\pgf@circ@res@up}} % cathode anchor
-			\pgfpathlineto{\pgfpoint{-\ctikzvalof{tubes/triode/cathode width}\pgf@circ@res@up}{-\ctikzvalof{tubes/triode/cathode distance}\pgf@circ@res@up}}
-			\pgfpathlineto{\pgfpoint{\ctikzvalof{tubes/triode/cathode width}\pgf@circ@res@up}{-\ctikzvalof{tubes/triode/cathode distance}\pgf@circ@res@up}}
-			\pgfpathlineto{\pgfpoint{\ctikzvalof{tubes/triode/cathode width}\pgf@circ@res@up}{-\ctikzvalof{tubes/triode/cathode distance}\pgf@circ@res@up-\ctikzvalof{tubes/triode/cathode right extend}\pgf@circ@res@up}}
+			\pgfpathmoveto{\pgfpoint{-\ctikzvalof{tubes/triode/cathode width}\pgf@circ@res@right}{-\pgf@circ@res@up}}
+			\pgfpathlineto{\pgfpoint{-\ctikzvalof{tubes/triode/cathode width}\pgf@circ@res@right}{-\ctikzvalof{tubes/triode/cathode distance}\pgf@circ@res@up}}
+			\pgfpathlineto{\pgfpoint{\ctikzvalof{tubes/triode/cathode width}\pgf@circ@res@right}{-\ctikzvalof{tubes/triode/cathode distance}\pgf@circ@res@up}}
+			\pgfpathlineto{\pgfpoint{\ctikzvalof{tubes/triode/cathode width}\pgf@circ@res@right}{-\ctikzvalof{tubes/triode/cathode distance}\pgf@circ@res@up-\ctikzvalof{tubes/triode/cathode right extend}\pgf@circ@res@up}}
 			\pgfusepath{draw}
 			            
 		\endpgfscope
