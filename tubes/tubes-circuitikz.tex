@@ -92,6 +92,9 @@
 \newif\ifpgf@circuit@tubes@nocathode\pgf@circuit@tubes@nocathodefalse
 \pgfkeys{/tikz/nocathode/.add code={}{\pgf@circuit@tubes@nocathodetrue}}
 \ctikzset{tubes/nocathode/.add code={}{\pgf@circuit@tubes@nocathodetrue}}
+\newif\ifpgf@circuit@tubes@fullcathode\pgf@circuit@tubes@fullcathodefalse
+\pgfkeys{/tikz/fullcathode/.add code={}{\pgf@circuit@tubes@fullcathodetrue}}
+\ctikzset{tubes/fullcathode/.add code={}{\pgf@circuit@tubes@fullcathodetrue}}
 
 % Draw tube outline
 \def\pgf@circ@tubes@drawtube{%
@@ -161,14 +164,34 @@
 			\northwest
 			\pgf@x=0pt
 		}
-		\ifpgf@circuit@tubes@nocathode
-		\else
-			\anchor{cathode}{%
-		        \northwest
-		        \pgf@y=-\pgf@y
-				\pgf@x=\ctikzvalof{tubes/#1/cathode width}\pgf@x
-			}
-		\fi
+		\anchor{cathode}{%
+			\northwest
+			\pgf@y=-\pgf@y
+			\pgf@x=\ctikzvalof{tubes/#1/cathode width}\pgf@x
+		}
+		\anchor{cathode 1}{%
+			\northwest
+			\pgf@y=-\pgf@y
+			\pgf@x=\ctikzvalof{tubes/#1/cathode width}\pgf@x
+		}
+		\anchor{cathode 2}{%
+			\northwest
+			\pgf@y=-\pgf@y
+			\pgf@x=-\ctikzvalof{tubes/#1/cathode width}\pgf@x
+		}
+		\anchor{filament 1}{%
+			\northwest
+			\pgfmathparse{(\ctikzvalof{tubes/#1/tube radius}*sin(\ctikzvalof{tubes/#1/filament angle})}
+			\pgf@x=\pgfmathresult\pgf@x
+			\pgf@y=-\pgf@y
+		}
+		\anchor{filament 2}{%
+			\northwest
+			\pgfmathparse{(\ctikzvalof{tubes/#1/tube radius}*sin(\ctikzvalof{tubes/#1/filament angle})}
+			\pgf@x=-\pgfmathresult\pgf@x
+			\pgf@y=-\pgf@y
+		}
+
 		% Extra anchors
 		#2
 
@@ -236,7 +259,12 @@
 					\pgfpathmoveto{\pgfpoint{-\ctikzvalof{tubes/#1/cathode width}\pgf@circ@res@right}{-\pgf@circ@res@up}}
 					\pgfpathlineto{\pgfpoint{-\ctikzvalof{tubes/#1/cathode width}\pgf@circ@res@right}{-\ctikzvalof{tubes/#1/cathode distance}\pgf@circ@res@up}}
 					\pgfpathlineto{\pgfpoint{\ctikzvalof{tubes/#1/cathode width}\pgf@circ@res@right}{-\ctikzvalof{tubes/#1/cathode distance}\pgf@circ@res@up}}
-					\pgfpathlineto{\pgfpoint{\ctikzvalof{tubes/#1/cathode width}\pgf@circ@res@right}{-\ctikzvalof{tubes/#1/cathode distance}\pgf@circ@res@up-\ctikzvalof{tubes/#1/cathode right extend}\pgf@circ@res@up}}
+					\ifpgf@circuit@tubes@fullcathode
+						\pgfpathlineto{\pgfpoint{\ctikzvalof{tubes/#1/cathode width}\pgf@circ@res@right}{-\pgf@circ@res@up}}
+						\pgf@circuit@tubes@fullcathodefalse
+					\else
+						\pgfpathlineto{\pgfpoint{\ctikzvalof{tubes/#1/cathode width}\pgf@circ@res@right}{-\ctikzvalof{tubes/#1/cathode distance}\pgf@circ@res@up-\ctikzvalof{tubes/#1/cathode right extend}\pgf@circ@res@up}}
+					\fi
 				\fi
 				\pgfusepath{draw}
 				            
