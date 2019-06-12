@@ -52,7 +52,7 @@
 \ctikzset{tubes/grid protrusion/.initial=0.25}       % distance from center
 \ctikzset{tubes/grid dashes/.initial=5}              % number of grid dashes
 \ctikzset{tubes/grid separation/.initial=0.2}        % separation between grids
-\ctikzset{tubes/grid shift/.initial=0.0}             % x shift grids from center
+\ctikzset{tubes/grid shift/.initial=0.0}             % y shift grids from center
 \ctikzset{tubes/cathode distance/.initial=0.40}      % distance from grid
 \ctikzset{tubes/cathode width/.initial=0.40}         % width of an cathode
 \ctikzset{tubes/cathode corners/.initial=0.06}       % corners of the cathode wire
@@ -75,12 +75,13 @@
 \pgfkeys{/tikz/fullcathode/.add code={}{\pgf@circuit@tubes@fullcathodetrue}}
 \ctikzset{tubes/fullcathode/.add code={}{\pgf@circuit@tubes@fullcathodetrue}}
 
+\pgfkeys{/tikz/model/.initial={}}
 
 % Draw tube outline
 \def\pgf@circ@tubes@drawtube{%
-	\pgfmathparse{(\pgf@circ@res@up-\pgf@circ@res@right)}
 	\pgfpathmoveto{\pgfpoint{-\pgf@circ@res@right}{0pt}}
-	\pgfutil@tempdima=\pgfmathresult pt
+	\pgfutil@tempdima=\pgf@circ@res@up
+	\advance\pgfutil@tempdima by -\pgf@circ@res@right
 	\pgfpathlineto{\pgfpoint{-\pgf@circ@res@right}{\pgfutil@tempdima}}
 	\pgfpatharc{180}{0}{\pgf@circ@res@right}
 	\pgfpathlineto{\pgfpoint{\pgf@circ@res@right}{-\pgfutil@tempdima}}
@@ -88,11 +89,13 @@
 	\pgfpathclose
 }
 
+
 %% The diode (tube), triode, tetrode and pentode only differ in the
 %% number of grids. So we construct a generic declare function in
 %% which we can put code for the grid anchors and grid drawing code
 %% \pgfcircdeclaretube{tube name}{grid anchors}{grid drawing code}
 \long\def\pgfcircdeclaretube#1#2#3{%
+	%\nodeparts{}
 	\pgfdeclareshape{#1}{
 	    \anchor{center}{
 	        \pgfpointorigin
@@ -171,6 +174,11 @@
 			\pgf@x=-\pgfmathresult\pgf@x
 			\pgf@y=-\pgf@y
 		}
+%	    \savedanchor{model}{% east anchor
+%	        \northwest
+%	        \pgf@x=-\pgf@x
+%	        \pgf@y=0pt
+%	    }
 
 		% Extra anchors
 		#2
@@ -249,11 +257,35 @@
 
 				% Draw the background	
 				\pgfusepath{draw}
-				            
+
+				% Put the model on the east side, if user supplied it
+				\def\pgf@temp{}
+				\edef\pgfutil@temp{\pgfkeysvalueof{/tikz/model}}
+				\ifx\pgf@temp\pgfutil@temp
+				\else
+					\setbox\pgfutil@tempboxa=\hbox{{%  see \pgf@makehbox#1
+						\pgfinterruptpicture% Interrupt picture to restore font
+							\pgfutil@temp%
+						\endpgfinterruptpicture%
+					}}
+					\pgfutil@tempdima=0.5\wd\pgfutil@tempboxa
+					\advance\pgfutil@tempdima by \pgf@circ@res@right
+					\advance\pgfutil@tempdima by 4pt
+					\pgftext[x=\pgfutil@tempdima] {\pgfutil@temp}
+				\fi
 			\endpgfscope
 		}
 	}
 }
+
+\long\def\pgf@makehbox#1{%
+  \setbox\pgf@hbox=\hbox{{%
+    \pgfinterruptpicture%
+      #1%
+    \endpgfinterruptpicture%
+    }}}
+
+
 
 \pgfcircdeclaretube{diodetube}{}{} % shape diode already exists
 
