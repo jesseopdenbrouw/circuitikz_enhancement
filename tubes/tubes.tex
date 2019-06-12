@@ -42,7 +42,7 @@
 \parskip=4pt plus 6pt minus 2pt
 \usepackage[siunitx, RPvoltages]{circuitikz}
 \usepackage{ctikzmanutils}
-
+\usepackage{etoolbox}
 
 \def\Circuitikz{CircuiTi\emph{k}Z}
 
@@ -54,7 +54,7 @@
 \input{tubes-circuitikz.tex}
 
 \begin{document}
-\maketitle
+%\maketitle
 
 
 
@@ -87,30 +87,30 @@ Example triode amplifier:
 
 \begin{lstlisting}
 \draw (0,0) node (start) {}
-            	to[sV=$V_i$] ++(0,2+\ctikzvalof{tubes/triode/height})
-            	to[C=$C_i$] ++(2,0) node (Rg) {}
-				to[R=$R_g$] (Rg |- start)
-(Rg)			to[short,*-] ++(1,0)
-				node[triode,anchor=grid] (Tri) {} ++(2,0)
-(Tri.cathode)	to[R=$R_c$,-*] (Tri.cathode |- start)
-(Tri.anode)		to [R=$R_a$] ++(0,2)
-				to [short] ++(3.5,0) node(Vatop) {}
-				to [V<=$V_a$] (Vatop |- start)
-				to [short] (start)
-(Tri.anode) ++(0,0.2) to[C=$C_o$,*-o] ++(2,0)
-(Tri.cathode) ++(0,-0.2) to[short,*-] ++(1.5,0) node(Cctop) {}
-				to[C=$C_c$,-*] (start -| Cctop)
+                to[sV=$V_i$] ++(0,2+\ctikzvalof{tubes/height})
+                to[C=$C_i$] ++(2,0) node (Rg) {}
+                to[R=$R_g$] (Rg |- start)
+(Rg)            to[short,*-] ++(1,0)
+                node[triode,anchor=grid,model=6S2S] (Tri) {} ++(2,0)
+(Tri.cathode)   to[R=$R_c$,-*] (Tri.cathode |- start)
+(Tri.anode)     to [R=$R_a$] ++(0,2)
+                to [short] ++(3.5,0) node(Vatop) {}
+                to [V<=$V_a$] (Vatop |- start)
+                to [short] (start)
+(Tri.anode)     ++(0,0.2) to[C=$C_o$,*-o] ++(2,0)
+(Tri.cathode)   ++(0,-0.2) to[short,*-] ++(1.5,0) node(Cctop) {}
+                to[C=$C_c$,-*] (start -| Cctop)
 ;
-\draw[red,thin] (Tri.north west) rectangle (Tri.south east);
-\draw[blue] (Tri.east) node[right] {$\frac{1}{2}$ECC83};
+\draw[red,thin,dashed] (Tri.north west) rectangle (Tri.south east);
 \end{lstlisting}
+
 \begin{tikzpicture}
 \draw (0,0) node (start) {}
-            	to[sV=$V_i$] ++(0,2+\ctikzvalof{tubes/height})
-            	to[C=$C_i$] ++(2,0) node (Rg) {}
+                to[sV=$V_i$] ++(0,2+\ctikzvalof{tubes/height})
+                to[C=$C_i$] ++(2,0) node (Rg) {}
 				to[R=$R_g$] (Rg |- start)
 (Rg)			to[short,*-] ++(1,0)
-				node[triode,anchor=grid] (Tri) {} ++(2,0)
+				node[triode,anchor=grid,model=6S2S] (Tri) {} ++(2,0)
 (Tri.cathode)	to[R=$R_c$,-*] (Tri.cathode |- start)
 (Tri.anode)		to [R=$R_a$] ++(0,2)
 				to [short] ++(3.5,0) node(Vatop) {}
@@ -120,8 +120,7 @@ Example triode amplifier:
 (Tri.cathode) ++(0,-0.2) to[short,*-] ++(1.5,0) node(Cctop) {}
 				to[C=$C_c$,-*] (start -| Cctop)
 ;
-\draw[red,thin] (Tri.north west) rectangle (Tri.south east);
-\draw[blue] (Tri.east) node[right] {$\frac{1}{2}$ECC83};
+\draw[red,thin,dashed] (Tri.north west) rectangle (Tri.south east);
 \end{tikzpicture}
 
 \end{document}
