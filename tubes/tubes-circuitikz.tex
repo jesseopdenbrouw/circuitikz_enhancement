@@ -75,10 +75,12 @@
 \pgfkeys{/tikz/fullcathode/.add code={}{\pgf@circuit@tubes@fullcathodetrue}}
 \ctikzset{tubes/fullcathode/.add code={}{\pgf@circuit@tubes@fullcathodetrue}}
 
-\pgfkeys{/tikz/model/.initial={}}
+\pgfkeys{/tikz/tube model/.initial={}}
 
 % Draw tube outline
 \def\pgf@circ@tubes@drawtube{%
+	\ifdim\ctikzvalof{tubes/width}pt>\ctikzvalof{tubes/height}pt\relax
+	\fi
 	\pgfpathmoveto{\pgfpoint{-\pgf@circ@res@right}{0pt}}
 	\pgfutil@tempdima=\pgf@circ@res@up
 	\advance\pgfutil@tempdima by -\pgf@circ@res@right
@@ -95,7 +97,6 @@
 %% which we can put code for the grid anchors and grid drawing code
 %% \pgfcircdeclaretube{tube name}{grid anchors}{grid drawing code}
 \long\def\pgfcircdeclaretube#1#2#3{%
-	%\nodeparts{}
 	\pgfdeclareshape{#1}{
 	    \anchor{center}{
 	        \pgfpointorigin
@@ -174,6 +175,13 @@
 			\pgf@x=-\pgfmathresult\pgf@x
 			\pgf@y=-\pgf@y
 		}
+		\anchor{text}{
+			\pgf@x=\ctikzvalof{tubes/width}\pgf@circ@Rlen
+			\pgf@x=0.5\pgf@x
+			\advance\pgf@x by 4pt
+%			\pgf@y=\dimexpr.5\dp\pgfnodeparttextbox-.5\ht\pgfnodeparttextbox
+			\pgf@y=-.5\ht\pgfnodeparttextbox
+        }
 
 		% Extra anchors
 		#2
@@ -255,7 +263,7 @@
 
 				% Put the model on the east side, if user supplied it
 				\def\pgf@temp{}
-				\edef\pgfutil@temp{\pgfkeysvalueof{/tikz/model}}
+				\edef\pgfutil@temp{\pgfkeysvalueof{/tikz/tube model}}
 				\ifx\pgf@temp\pgfutil@temp
 				\else
 					\setbox\pgfutil@tempboxa=\hbox{{%  see \pgf@makehbox#1
