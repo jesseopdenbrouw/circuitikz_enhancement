@@ -174,11 +174,6 @@
 			\pgf@x=-\pgfmathresult\pgf@x
 			\pgf@y=-\pgf@y
 		}
-%	    \savedanchor{model}{% east anchor
-%	        \northwest
-%	        \pgf@x=-\pgf@x
-%	        \pgf@y=0pt
-%	    }
 
 		% Extra anchors
 		#2
@@ -277,15 +272,6 @@
 		}
 	}
 }
-
-\long\def\pgf@makehbox#1{%
-  \setbox\pgf@hbox=\hbox{{%
-    \pgfinterruptpicture%
-      #1%
-    \endpgfinterruptpicture%
-    }}}
-
-
 
 \pgfcircdeclaretube{diodetube}{}{} % shape diode already exists
 
