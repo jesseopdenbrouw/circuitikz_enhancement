@@ -96,7 +96,8 @@
 		\ifnum\@tempcnta>0\relax
 	\repeat
 	% Grid: connection from suppressor to cathode
-	\pgfsetcornersarced{\pgfpoint{\ctikzvalof{tubes/cathode corners}\pgf@circ@res@up}{\ctikzvalof{tubes/cathode corners}\pgf@circ@res@up}}	\pgfpathlineto{\pgfpoint{\pgf@circ@res@temp}{\pgfutil@tempdima-2*\ctikzvalof{tubes/grid separation}\pgf@circ@res@up}}
+	\pgfsetcornersarced{\pgfpoint{\ctikzvalof{tubes/cathode corners}\pgf@circ@res@up}{\ctikzvalof{tubes/cathode corners}\pgf@circ@res@up}}
+	\pgfpathlineto{\pgfpoint{\pgf@circ@res@temp}{\pgfutil@tempdima-2*\ctikzvalof{tubes/grid separation}\pgf@circ@res@up}}
 	\pgfpathlineto{\pgfpoint{\ctikzvalof{tubes/cathode width}\pgf@circ@res@right-0.4142136*\ctikzvalof{tubes/cathode corners}\pgf@circ@res@right}{-\ctikzvalof{tubes/cathode distance}\pgf@circ@res@up-0.4142136*\ctikzvalof{tubes/cathode corners}\pgf@circ@res@up}}
 					
 }
