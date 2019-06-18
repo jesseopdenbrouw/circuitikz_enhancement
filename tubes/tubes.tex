@@ -64,6 +64,7 @@
 	\circuitdesc*{triode}{Triode}{} ( anode/90/0.2, cathode/-90/0.2, grid/180/0.2 )
 	\circuitdesc*{tetrode}{Tetrode}{} ( anode/90/0.2, cathode/-90/0.2, grid/190/0.2,screen/170/0.2 )
 	\circuitdesc*{pentode}{Pentode}{} ( anode/90/0.2, cathode/-90/0.2, grid/190/0.2,screen/180/0.2,suppressor/170/0.2 )
+	\circuitdesc*{pentode suppressor to cathode}{Pentode with suppressor grid connectec to cathode}{} ( anode/90/0.2, cathode/-90/0.2, grid/190/0.2,screen/180/0.2 )
 \end{groupdesc}
 
 Normally, the filament is not drawn. If you want a filament, put the \verb|filament| option in the node description:
@@ -153,6 +154,11 @@ Width smaller than or equal to height
 \fi
 
 \begin{circuitikz}
-\draw (0,0) node[pentode] {};
+\draw (0,0) node[pentode suppressor to cathode] {};
 \end{circuitikz}
+
+%\begin{circuitikz}
+%\draw (0,0) node[mycircle] (x) {};
+%\draw (x.north) node[circ] {};
+%\end{circuitikz}
 \end{document}
