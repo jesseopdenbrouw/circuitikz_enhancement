@@ -43,64 +43,6 @@
 
 \makeatletter
 
-\pgfcircdeclaretube{pentode suppressor to cathode}
-{
-	\anchor{grid} {%
-        \northwest
-		\pgfutil@tempdima=\pgf@y
-		\pgf@y=-\ctikzvalof{tubes/grid separation}\pgf@y
-		\advance\pgf@y by \ctikzvalof{tubes/grid shift}\pgfutil@tempdima
-    }
-	\anchor{screen} {%
-        \northwest
-		\pgf@y=\ctikzvalof{tubes/grid shift}\pgf@y
-    }
-}
-{
-	% Grid x/y points
-	\pgf@xa=-\ctikzvalof{tubes/tube radius}\pgf@circ@res@right
-	\advance\pgf@xa by -\ctikzvalof{tubes/grid protrusion}\pgf@circ@res@right
-	\pgfutil@tempdima=\ctikzvalof{tubes/grid separation}\pgf@circ@res@up
-	\pgfutil@tempdimb=-\pgfutil@tempdima
-	\advance\pgfutil@tempdima by \ctikzvalof{tubes/grid shift}\pgf@circ@res@up
-	\advance\pgfutil@tempdimb by \ctikzvalof{tubes/grid shift}\pgf@circ@res@up
-	\@tempdimc=\ctikzvalof{tubes/grid shift}\pgf@circ@res@up
-	% Grid protrusion
-	\pgfpathmoveto{\pgfpoint{-\pgf@circ@res@right}{\pgfutil@tempdimb}}
-	\pgfpathlineto{\pgfpoint{\pgf@xa}{\pgfutil@tempdimb}}
-	\pgfpathmoveto{\pgfpoint{-\pgf@circ@res@right}{\@tempdimc}}
-	\pgfpathlineto{\pgfpoint{\pgf@xa}{\@tempdimc}}
-	% Grid dashes: calculations
-	\pgf@xb=2\pgf@circ@res@right
-	\pgf@circ@res@step=\ctikzvalof{tubes/tube radius}\pgf@xb
-	\@tempcnta=\ctikzvalof{tubes/grid dashes}  % dashes*2+1
-	\multiply\@tempcnta by 2\relax
-	\advance\@tempcnta by 1\relax
-	\advance\pgf@circ@res@step by -\pgf@xa
-	\divide\pgf@circ@res@step by \@tempcnta
-	% Grid dashes: draw
-	\pgf@circ@res@temp=\pgf@xa
-	\@tempcnta=\ctikzvalof{tubes/grid dashes}
-	\loop
-		\advance\pgf@circ@res@temp by\pgf@circ@res@step
-		\ifnum\@tempcnta>1\relax
-			\pgfpathmoveto{\pgfpoint{\pgf@circ@res@temp}{\pgfutil@tempdimb}}
-			\pgfpathlineto{\pgfpoint{\pgf@circ@res@temp+\pgf@circ@res@step}{\pgfutil@tempdimb}}
-			\pgfpathmoveto{\pgfpoint{\pgf@circ@res@temp}{\@tempdimc}}
-			\pgfpathlineto{\pgfpoint{\pgf@circ@res@temp+\pgf@circ@res@step}{\@tempdimc}}
-		\fi
-		\pgfpathmoveto{\pgfpoint{\pgf@circ@res@temp}{\pgfutil@tempdima}}
-		\pgfpathlineto{\pgfpoint{\pgf@circ@res@temp+\pgf@circ@res@step}{\pgfutil@tempdima}}
-		\advance\pgf@circ@res@temp by\pgf@circ@res@step
-		\advance\@tempcnta by-1
-		\ifnum\@tempcnta>0\relax
-	\repeat
-	% Grid: connection from suppressor to cathode
-	\pgfsetcornersarced{\pgfpoint{\ctikzvalof{tubes/cathode corners}\pgf@circ@res@up}{\ctikzvalof{tubes/cathode corners}\pgf@circ@res@up}}
-	\pgfpathlineto{\pgfpoint{\pgf@circ@res@temp}{\pgfutil@tempdima-2*\ctikzvalof{tubes/grid separation}\pgf@circ@res@up}}
-	\pgfpathlineto{\pgfpoint{\ctikzvalof{tubes/cathode width}\pgf@circ@res@right-0.4142136*\ctikzvalof{tubes/cathode corners}\pgf@circ@res@right}{-\ctikzvalof{tubes/cathode distance}\pgf@circ@res@up-0.4142136*\ctikzvalof{tubes/cathode corners}\pgf@circ@res@up}}
-					
-}
 
 \pgfdeclareshape{mycircle}
 {
