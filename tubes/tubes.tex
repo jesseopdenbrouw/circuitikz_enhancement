@@ -50,10 +50,10 @@
 \date{\today}
 
 
-%\input{tubes-circuitikz.tex}
-\makeatletter
-\input{pgfcirctripoles.tex}
-\makeatother
+%%%\input{tubes-circuitikz.tex}
+%%\makeatletter
+%%\input{pgfcirctripoles.tex}
+%%\makeatother
 
 \begin{document}
 %\maketitle
@@ -67,6 +67,11 @@
 	\circuitdesc*{triode}{Triode}{} ( anode/90/0.2, cathode/-90/0.2, grid/180/0.2 )
 	\circuitdesc*{tetrode}{Tetrode}{} ( anode/90/0.2, cathode/-90/0.2, grid/190/0.2,screen/170/0.2 )
 	\circuitdesc*{pentode}{Pentode}{} ( anode/90/0.2, cathode/-90/0.2, grid/190/0.2,screen/180/0.2,suppressor/170/0.2 )
+\end{groupdesc}
+
+Some pentodes have the suppressor grid internally connected to the control grid, which saves a pin on the tube's housing.
+
+\begin{groupdesc}
 	\circuitdesc*{pentode suppressor to cathode}{Pentode with suppressor grid connected to cathode}{} ( anode/90/0.2, cathode/-90/0.2, grid/190/0.2,screen/180/0.2 )
 \end{groupdesc}
 
