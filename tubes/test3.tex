@@ -1,0 +1,59 @@
+%% Insert these four lines to prevent TikZ from failing to compile
+\catcode`\@11\relax
+\def\XC@tgt@mod#1{#1}
+\def\XC@sdef#1#2{\edef#1{#2}}
+
+\newcount\@tempcnta
+\newdimen \@tempdimc
+
+\input circuitikz.tex
+\catcode`\@12\relax
+
+\pgfkeys{/handlers/.unknown/.code={}}
+
+\pgfkeys{/tikz/circuitikz/.cd}
+
+%\typeout{Starting picture...}
+
+%%%\tikzpicture[scale=1.25,/tikz/circuitikz/.cd]
+%%%\draw (0,0) to[/tikz/circuitikz/V, /tikz/circuitikz/v=$V$]        ++(0,2) node[above] {$V_1$}
+%%%            to[/tikz/circuitikz/R, /tikz/circuitikz/R=$R_1$, -*]   ++(2,0) node (2) {} node[below] {$V_x$}
+%%%        (2) to[/tikz/circuitikz/short] ++(1,0)
+%%%            to[/tikz/circuitikz/open] ++(0,-2)
+%%%            to[/tikz/circuitikz/R, /tikz/circuitikz/a=$R_{in}$, /tikz/circuitikz/v^>=$V_{in}$,/tikz/circuitikz/*-] ++(0,2) 
+%%%        (2) to[/tikz/circuitikz/short] ++(0,1)
+%%%            to[/tikz/circuitikz/R=$R_2$] ++(5.5,0)
+%%%            to[/tikz/circuitikz/short, /tikz/circuitikz/-*] ++(0,-1)  node (3) {} %node[right] {$U_{2}$}
+%%%			to[/tikz/circuitikz/short, /tikz/circuitikz/-o] ++(0.5,0) node[right] {$V_{2}$}
+%%%        (3) to[/tikz/circuitikz/R=$R_{out}$]  ++(-2,0)  node [above] {$V_y$}
+%%%            to[/tikz/circuitikz/cV, /tikz/circuitikz/v_<=$aV_{in}$, /tikz/circuitikz/-*] ++(0,-2)
+%%%			to[/tikz/circuitikz/open] ++(2.5,0)
+%%%            to[/tikz/circuitikz/short, /tikz/circuitikz/o-.] (0,0)
+%%%;
+%%%\endtikzpicture
+%%%\tikzpicture[scale=1.25,/tikz/circuitikz/.cd]
+%%%\draw (0,0) to[/tikz/circuitikz/V, /tikz/circuitikz/v=$V$]        ++(0,2) node[above] {$V_1$}
+%%%            to[/tikz/circuitikz/R, /tikz/circuitikz/R=$R_1$, /tikz/circuitikz/-*]   ++(2,0) node (2) {} node[below] {$V_x$}
+%%%        (2) to[/tikz/circuitikz/short] ++(1,0)
+%%%            to[/tikz/circuitikz/open] ++(0,-2)
+%%%            to[/tikz/circuitikz/R, /tikz/circuitikz/a=$R_{in}$, /tikz/circuitikz/v=$V_{in}$,/tikz/circuitikz/*-] ++(0,2) 
+%%%        (2) to[/tikz/circuitikz/short] ++(0,1)
+%%%            to[/tikz/circuitikz/R=$R_2$] ++(5.5,0)
+%%%            to[/tikz/circuitikz/short, /tikz/circuitikz/-*] ++(0,-1)  node (3) {} %node[right] {$U_{2}$}
+%%%			to[/tikz/circuitikz/short, /tikz/circuitikz/-o] ++(0.5,0) node[right] {$V_{2}$}
+%%%        (3) to[/tikz/circuitikz/R=$R_{out}$]  ++(-2,0)  node [above] {$V_y$}
+%%%            to[/tikz/circuitikz/cV, /tikz/circuitikz/v=$aV_{in}$, /tikz/circuitikz/-*] ++(0,-2)
+%%%			to[/tikz/circuitikz/open] ++(2.5,0)
+%%%            to[/tikz/circuitikz/short, /tikz/circuitikz/o-.] (0,0)
+%%%;
+%%%\endtikzpicture
+
+
+\tikzpicture[scale=1.25]
+\draw (0,0) node[diodetube] {};
+\draw (3,0) node[triode,anchor=grid] {};
+\draw (6,0) node[tetrode,anchor=grid] {};
+\draw (9,0) node[pentode,anchor=grid] {};
+\endtikzpicture
+
+\end
