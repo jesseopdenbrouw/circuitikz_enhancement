@@ -4383,7 +4383,11 @@
 
 \pgfcircdeclaretube{triode}
 {
-    \anchor{grid} {%
+    \anchor{grid} {% should not be used
+        \northwest
+        \pgf@y=\ctikzvalof{tubes/grid shift}\pgf@y
+    }
+    \anchor{control} {%
         \northwest
         \pgf@y=\ctikzvalof{tubes/grid shift}\pgf@y
     }
@@ -4397,27 +4401,34 @@
     % Grid dashes: calculations
     \pgf@xb=2\pgf@circ@res@right
     \pgf@circ@res@step=\ctikzvalof{tubes/tube radius}\pgf@xb
-    \c@pgf@counta=\ctikzvalof{tubes/grid dashes}  % dashes*2+1
-    \multiply\c@pgf@counta by 2\relax
-    \advance\c@pgf@counta by 1\relax
+    \pgf@circ@count@a=\ctikzvalof{tubes/grid dashes}  % dashes*2+1
+    \multiply\pgf@circ@count@a by 2\relax
+    \advance\pgf@circ@count@a by 1\relax
     \advance\pgf@circ@res@step by -\pgf@xa
-    \divide\pgf@circ@res@step by \c@pgf@counta
+    \divide\pgf@circ@res@step by \pgf@circ@count@a
     % Grid dashes: draw
     \pgf@circ@res@temp=\pgf@xa
-    \c@pgf@counta=\ctikzvalof{tubes/grid dashes}
+    \pgf@circ@count@a=\ctikzvalof{tubes/grid dashes}
     \loop
         \advance\pgf@circ@res@temp by\pgf@circ@res@step
         \pgfpathmoveto{\pgfpoint{\pgf@circ@res@temp}{\ctikzvalof{tubes/grid shift}\pgf@circ@res@up}}
         \advance\pgf@circ@res@temp by\pgf@circ@res@step
         \pgfpathlineto{\pgfpoint{\pgf@circ@res@temp}{\ctikzvalof{tubes/grid shift}\pgf@circ@res@up}}
-        \advance\c@pgf@counta by-1
-        \ifnum\c@pgf@counta>0\relax
+        \advance\pgf@circ@count@a by-1
+        \ifnum\pgf@circ@count@a>0\relax
     \repeat
 }
 
 \pgfcircdeclaretube{tetrode}
 {
-    \anchor{grid} {%
+    \anchor{grid} {% should not be used
+        \northwest
+        \pgfutil@tempdima=\pgf@y
+        \pgf@y=-\ctikzvalof{tubes/grid separation}\pgf@y
+        \pgf@y=0.5\pgf@y
+        \advance\pgf@y by \ctikzvalof{tubes/grid shift}\pgfutil@tempdima
+    }
+    \anchor{control} {%
         \northwest
         \pgfutil@tempdima=\pgf@y
         \pgf@y=-\ctikzvalof{tubes/grid separation}\pgf@y
@@ -4450,14 +4461,14 @@
     % Grid dashes: calculations
     \pgf@xb=2\pgf@circ@res@right
     \pgf@circ@res@step=\ctikzvalof{tubes/tube radius}\pgf@xb
-    \c@pgf@counta=\ctikzvalof{tubes/grid dashes}  % dashes*2+1
-    \multiply\c@pgf@counta by 2\relax
-    \advance\c@pgf@counta by 1\relax
+    \pgf@circ@count@a=\ctikzvalof{tubes/grid dashes}  % dashes*2+1
+    \multiply\pgf@circ@count@a by 2\relax
+    \advance\pgf@circ@count@a by 1\relax
     \advance\pgf@circ@res@step by -\pgf@xa
-    \divide\pgf@circ@res@step by \c@pgf@counta
+    \divide\pgf@circ@res@step by \pgf@circ@count@a
     % Grid dashes: draw
     \pgf@circ@res@temp=\pgf@xa
-    \c@pgf@counta=\ctikzvalof{tubes/grid dashes}
+    \pgf@circ@count@a=\ctikzvalof{tubes/grid dashes}
     \loop
         \advance\pgf@circ@res@temp by\pgf@circ@res@step
         \pgfpathmoveto{\pgfpoint{\pgf@circ@res@temp}{\pgfutil@tempdima}}
@@ -4465,18 +4476,20 @@
         \pgfpathmoveto{\pgfpoint{\pgf@circ@res@temp}{\pgfutil@tempdimb}}
         \pgfpathlineto{\pgfpoint{\pgf@circ@res@temp+\pgf@circ@res@step}{\pgfutil@tempdimb}}
         \advance\pgf@circ@res@temp by\pgf@circ@res@step
-        \advance\c@pgf@counta by-1
-        \ifnum\c@pgf@counta>0\relax
+        \advance\pgf@circ@count@a by-1
+        \ifnum\pgf@circ@count@a>0\relax
     \repeat
 }
 
-
-% Needed for ConTeXt
-\let\pgf@circ@tempdimc\pgf@circ@res@other
-
 \pgfcircdeclaretube{pentode}
 {
-    \anchor{grid} {%
+    \anchor{grid} {% should not be used
+        \northwest
+        \pgfutil@tempdima=\pgf@y
+        \pgf@y=-\ctikzvalof{tubes/grid separation}\pgf@y
+        \advance\pgf@y by \ctikzvalof{tubes/grid shift}\pgfutil@tempdima
+    }
+    \anchor{control} {%
         \northwest
         \pgfutil@tempdima=\pgf@y
         \pgf@y=-\ctikzvalof{tubes/grid separation}\pgf@y
@@ -4501,42 +4514,48 @@
     \pgfutil@tempdimb=-\pgfutil@tempdima
     \advance\pgfutil@tempdima by \ctikzvalof{tubes/grid shift}\pgf@circ@res@up
     \advance\pgfutil@tempdimb by \ctikzvalof{tubes/grid shift}\pgf@circ@res@up
-    \pgf@circ@tempdimc=\ctikzvalof{tubes/grid shift}\pgf@circ@res@up
+    \pgf@circ@res@other=\ctikzvalof{tubes/grid shift}\pgf@circ@res@up
     % Grid protrusion
     \pgfpathmoveto{\pgfpoint{-\pgf@circ@res@right}{\pgfutil@tempdimb}}
     \pgfpathlineto{\pgfpoint{\pgf@xa}{\pgfutil@tempdimb}}
     \pgfpathmoveto{\pgfpoint{-\pgf@circ@res@right}{\pgfutil@tempdima}}
     \pgfpathlineto{\pgfpoint{\pgf@xa}{\pgfutil@tempdima}}
-    \pgfpathmoveto{\pgfpoint{-\pgf@circ@res@right}{\pgf@circ@tempdimc}}
-    \pgfpathlineto{\pgfpoint{\pgf@xa}{\pgf@circ@tempdimc}}
+    \pgfpathmoveto{\pgfpoint{-\pgf@circ@res@right}{\pgf@circ@res@other}}
+    \pgfpathlineto{\pgfpoint{\pgf@xa}{\pgf@circ@res@other}}
     % Grid dashes: calculations
     \pgf@xb=2\pgf@circ@res@right
     \pgf@circ@res@step=\ctikzvalof{tubes/tube radius}\pgf@xb
-    \c@pgf@counta=\ctikzvalof{tubes/grid dashes}  % dashes*2+1
-    \multiply\c@pgf@counta by 2\relax
-    \advance\c@pgf@counta by 1\relax
+    \pgf@circ@count@a=\ctikzvalof{tubes/grid dashes}  % dashes*2+1
+    \multiply\pgf@circ@count@a by 2\relax
+    \advance\pgf@circ@count@a by 1\relax
     \advance\pgf@circ@res@step by -\pgf@xa
-    \divide\pgf@circ@res@step by \c@pgf@counta
+    \divide\pgf@circ@res@step by \pgf@circ@count@a
     % Grid dashes: draw
     \pgf@circ@res@temp=\pgf@xa
-    \c@pgf@counta=\ctikzvalof{tubes/grid dashes}
+    \pgf@circ@count@a=\ctikzvalof{tubes/grid dashes}
     \loop
         \advance\pgf@circ@res@temp by\pgf@circ@res@step
         \pgfpathmoveto{\pgfpoint{\pgf@circ@res@temp}{\pgfutil@tempdima}}
         \pgfpathlineto{\pgfpoint{\pgf@circ@res@temp+\pgf@circ@res@step}{\pgfutil@tempdima}}
         \pgfpathmoveto{\pgfpoint{\pgf@circ@res@temp}{\pgfutil@tempdimb}}
         \pgfpathlineto{\pgfpoint{\pgf@circ@res@temp+\pgf@circ@res@step}{\pgfutil@tempdimb}}
-        \pgfpathmoveto{\pgfpoint{\pgf@circ@res@temp}{\pgf@circ@tempdimc}}
-        \pgfpathlineto{\pgfpoint{\pgf@circ@res@temp+\pgf@circ@res@step}{\pgf@circ@tempdimc}}
+        \pgfpathmoveto{\pgfpoint{\pgf@circ@res@temp}{\pgf@circ@res@other}}
+        \pgfpathlineto{\pgfpoint{\pgf@circ@res@temp+\pgf@circ@res@step}{\pgf@circ@res@other}}
         \advance\pgf@circ@res@temp by\pgf@circ@res@step
-        \advance\c@pgf@counta by-1
-        \ifnum\c@pgf@counta>0\relax
+        \advance\pgf@circ@count@a by-1
+        \ifnum\pgf@circ@count@a>0\relax
     \repeat
 }
 
 \pgfcircdeclaretube{pentode suppressor to cathode}
 {
-    \anchor{grid} {%
+    \anchor{grid} {% should not be used
+        \northwest
+        \pgfutil@tempdima=\pgf@y
+        \pgf@y=-\ctikzvalof{tubes/grid separation}\pgf@y
+        \advance\pgf@y by \ctikzvalof{tubes/grid shift}\pgfutil@tempdima
+    }
+    \anchor{control} {%
         \northwest
         \pgfutil@tempdima=\pgf@y
         \pgf@y=-\ctikzvalof{tubes/grid separation}\pgf@y
@@ -4555,36 +4574,36 @@
     \pgfutil@tempdimb=-\pgfutil@tempdima
     \advance\pgfutil@tempdima by \ctikzvalof{tubes/grid shift}\pgf@circ@res@up
     \advance\pgfutil@tempdimb by \ctikzvalof{tubes/grid shift}\pgf@circ@res@up
-    \pgf@circ@tempdimc=\ctikzvalof{tubes/grid shift}\pgf@circ@res@up
+    \pgf@circ@res@other=\ctikzvalof{tubes/grid shift}\pgf@circ@res@up
     % Grid protrusion
     \pgfpathmoveto{\pgfpoint{-\pgf@circ@res@right}{\pgfutil@tempdimb}}
     \pgfpathlineto{\pgfpoint{\pgf@xa}{\pgfutil@tempdimb}}
-    \pgfpathmoveto{\pgfpoint{-\pgf@circ@res@right}{\pgf@circ@tempdimc}}
-    \pgfpathlineto{\pgfpoint{\pgf@xa}{\pgf@circ@tempdimc}}
+    \pgfpathmoveto{\pgfpoint{-\pgf@circ@res@right}{\pgf@circ@res@other}}
+    \pgfpathlineto{\pgfpoint{\pgf@xa}{\pgf@circ@res@other}}
     % Grid dashes: calculations
     \pgf@xb=2\pgf@circ@res@right
     \pgf@circ@res@step=\ctikzvalof{tubes/tube radius}\pgf@xb
-    \c@pgf@counta=\ctikzvalof{tubes/grid dashes}  % dashes*2+1
-    \multiply\c@pgf@counta by 2\relax
-    \advance\c@pgf@counta by 1\relax
+    \pgf@circ@count@a=\ctikzvalof{tubes/grid dashes}  % dashes*2+1
+    \multiply\pgf@circ@count@a by 2\relax
+    \advance\pgf@circ@count@a by 1\relax
     \advance\pgf@circ@res@step by -\pgf@xa
-    \divide\pgf@circ@res@step by \c@pgf@counta
+    \divide\pgf@circ@res@step by \pgf@circ@count@a
     % Grid dashes: draw
     \pgf@circ@res@temp=\pgf@xa
-    \c@pgf@counta=\ctikzvalof{tubes/grid dashes}
+    \pgf@circ@count@a=\ctikzvalof{tubes/grid dashes}
     \loop
         \advance\pgf@circ@res@temp by\pgf@circ@res@step
-        \ifnum\c@pgf@counta>1\relax
+        \ifnum\pgf@circ@count@a>1\relax
             \pgfpathmoveto{\pgfpoint{\pgf@circ@res@temp}{\pgfutil@tempdimb}}
             \pgfpathlineto{\pgfpoint{\pgf@circ@res@temp+\pgf@circ@res@step}{\pgfutil@tempdimb}}
-            \pgfpathmoveto{\pgfpoint{\pgf@circ@res@temp}{\pgf@circ@tempdimc}}
-            \pgfpathlineto{\pgfpoint{\pgf@circ@res@temp+\pgf@circ@res@step}{\pgf@circ@tempdimc}}
+            \pgfpathmoveto{\pgfpoint{\pgf@circ@res@temp}{\pgf@circ@res@other}}
+            \pgfpathlineto{\pgfpoint{\pgf@circ@res@temp+\pgf@circ@res@step}{\pgf@circ@res@other}}
         \fi
         \pgfpathmoveto{\pgfpoint{\pgf@circ@res@temp}{\pgfutil@tempdima}}
         \pgfpathlineto{\pgfpoint{\pgf@circ@res@temp+\pgf@circ@res@step}{\pgfutil@tempdima}}
         \advance\pgf@circ@res@temp by\pgf@circ@res@step
-        \advance\c@pgf@counta by-1
-        \ifnum\c@pgf@counta>0\relax
+        \advance\pgf@circ@count@a by-1
+        \ifnum\pgf@circ@count@a>0\relax
     \repeat
     % Grid: connection from suppressor to cathode
     \pgfsetcornersarced{\pgfpoint{\ctikzvalof{tubes/cathode corners}\pgf@circ@res@up}{\ctikzvalof{tubes/cathode corners}\pgf@circ@res@up}}

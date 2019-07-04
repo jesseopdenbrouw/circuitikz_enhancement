@@ -1,0 +1,7 @@
+%relative values are measured against the totaltime of `main job'.
+profilerentry	totaltime[s]	totaltime[percent]	selftime[s]	selftime[percent]	numinvocations	
+main job	24.41634	99.88403	0.0162	0.06561	1	
+preamble	1.54282	6.31104	1.54282	6.31104	1	
+<ENV>tikzpicture	22.85732	93.50586	17.67844	72.31903	100	
+<CS>pgfusepath	5.17888	21.1853	5.17888	21.1853	2400	
+% vim: ts=40 nowrap nostartofline 

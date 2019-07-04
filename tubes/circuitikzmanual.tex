@@ -1,4 +1,4 @@
-% !TeX document-id = {41a7aee8-d58b-4f73-8311-16f1c399883a}
+% !TeX document-id = {71c6af50-c6d7-4a14-89e8-2089cc2c8bd7}
 % % Konfiguration für Texstudio (Version > 2.9)
 % !TeX program = xelatex
 % !TeX TXS-program:compile = txs:///xelatex/[-8bit]
@@ -321,10 +321,10 @@ Feel free to load the package with your own cultural options:
             \begin{itemize}
                 \item \texttt{oldvoltagedirection}: Use old way of voltage direction having a difference between european and american direction, with wrong default labelling for batteries;
                 \item \texttt{nooldvoltagedirection}: The standard from 0.5 onward, utilize the (German?) standard of voltage arrows in the  direction of electric fields (without fixing batteries);
-                \item \texttt{RPvoltages} (meaning Rising Potential voltages): the arrow is in direction of rising potential, like in \texttt{oldvoltagedirections}, but batteries and current sources are fixed to follow the passive/active standard;
-                \item \texttt{EFvoltages} (meaning Electric Field voltages): the arrow is in direction of the electric field, like in \texttt{nooldvoltagedirections}, but batteries are fixed;
+                \item \texttt{RPvoltages} (meaning Rising Potential voltages): the arrow is in direction of rising potential, like in \texttt{oldvoltagedirection}, but batteries and current sources are fixed to follow the passive/active standard;
+                \item \texttt{EFvoltages} (meaning Electric Field voltages): the arrow is in direction of the electric field, like in \texttt{nooldvoltagedirection}, but batteries are fixed;
             \end{itemize}
-            If none of these option are given, the package will default to \texttt{nooldvoltagedirections}, but will give a warning. The behavior is also selectable circuit by circuit with the \texttt{voltage dir} style.
+            If none of these option are given, the package will default to \texttt{nooldvoltagedirection}, but will give a warning. The behavior is also selectable circuit by circuit with the \texttt{voltage dir} style.
         \item \texttt{betterproportions}\footnote{May change in the future!}: nicer proportions of transistors in comparision to resistors;
     \end{itemize}
 
@@ -1580,17 +1580,17 @@ To show that a device is optional, you can dash it. The inner symbol will be kep
 \subsection{Transistors}
 
 \begin{groupdesc}
-    \circuitdesc{nmos}{\scshape nmos}{}( G/180/0.2,D/0/0.2,S/0/0.2 )
-    \circuitdesc{pmos}{\scshape pmos}{}
-    \circuitdesc{hemt}{\scshape hemt}{}
-    \circuitdesc{npn}{\scshape npn}{}( B/180/0.2,C/0/0.2,E/0/0.2 )
-    \circuitdesc{pnp}{\scshape pnp}{}
-    \circuitdesc{npn,photo}{\scshape npn}{}( nobase/0/0.4 )
-    \circuitdesc{pnp,photo}{\scshape pnp}{}
-    \circuitdesc{nigbt}{\scshape nigbt}{}
-    \circuitdesc{pigbt}{\scshape pigbt}{}
-    \circuitdesc{Lnigbt}{\scshape Lnigbt}{}
-    \circuitdesc{Lpigbt}{\scshape Lpigbt}{}
+    \circuitdesc{nmos}{nmos}{}( G/180/0.2,D/0/0.2,S/0/0.2 )
+    \circuitdesc{pmos}{pmos}{}
+    \circuitdesc{hemt}{hemt}{}
+    \circuitdesc{npn}{npn}{}( B/180/0.2,C/0/0.2,E/0/0.2 )
+    \circuitdesc{pnp}{pnp}{}
+    \circuitdesc{npn,photo}{npn}{}( nobase/0/0.4 )
+    \circuitdesc{pnp,photo}{pnp}{}
+    \circuitdesc{nigbt}{nigbt}{}
+    \circuitdesc{pigbt}{pigbt}{}
+    \circuitdesc{Lnigbt}{Lnigbt}{}
+    \circuitdesc{Lpigbt}{Lpigbt}{}
 \end{groupdesc}
 
 For all transistors a body diode (or freewheeling diode) can automatically be drawn. Just use the global option bodydiode, or for single transistors, the tikz-option bodydiode:
@@ -1615,18 +1615,38 @@ The Base/Gate connection of all transistors can be disabled by the options \text
 \end{LTXexample}
 
 If the option \texttt{arrowmos} is used (or after the command \verb!\ctikzset{tripoles/mos style/arrows}! is given), this is the output:
-\ctikzset{tripoles/mos style/arrows}
 \begin{groupdesc}
-	\circuitdesc{nmos}{\scshape nmos}{}
-	\circuitdesc{pmos}{\scshape pmos}{}
+        \ctikzset{tripoles/mos style/arrows}
+	\circuitdesc{nmos}{nmos}{}
+	\circuitdesc{pmos}{pmos}{}
 \end{groupdesc}
-\ctikzset{tripoles/mos style/no arrows}
+
+You can go back to the no-arrows mos with \texttt{noarrowmos} locally or with
+\texttt{\textbackslash ctikzset\{tripoles/mos style/no arrows\}}.
+
 To draw the PMOS circle non-solid, use the option \texttt{emptycircle} or the command
-\\\verb!\ctikzset{tripoles/pmos style/emptycircle}!.
+\\\verb!\ctikzset{tripoles/pmos style/emptycircle}!. To remove the dot completely (only useful if you have \texttt{arrowmos} enabled, otherwise ther ewill be no difference between P-MOS and N-MOS), you can use the option \texttt{nocircle} or \verb|\ctikzset{tripoles/pmos style/nocircle}|.
 
 \begin{groupdesc}
-    \circuitdesc{pmos,emptycircle}{\scshape pmos}{}
+    \circuitdesc{pmos,emptycircle}{pmos}{}
+    \circuitdesc{pmos,nocircle,arrowmos}{pmos}{}
 \end{groupdesc}
+
+\begin{LTXexample}[varwidth=true]
+\begin{circuitikz}[
+    info/.style={left=1cm, blue, text width=5em, align=right},]
+    \draw (0,1) node{pmos} (2,1) node{nmos};
+    \draw (0,0) node[info]{default} node[pmos]{} (2,0) node[nmos]{};
+    \ctikzset{tripoles/mos style/arrows}
+    \draw (0,-2) node[info]{arrows} node[pmos]{} (2,-2) node[nmos]{};
+    \ctikzset{tripoles/pmos style/emptycircle}
+    \draw (0,-4) node[info]{emptycircle} node[pmos]{} (2,-4) node[nmos]{};
+    \ctikzset{tripoles/pmos style/nocircle}
+    \draw (0,-6) node[info]{nocircle} node[pmos]{} (2,-6) node[nmos]{};
+    \ctikzset{tripoles/mos style/no arrows}
+    \draw (0,-8) node[info, red]{no circle, no arrows, DON'T do it}
+          node[pmos]{} (2,-8) node[nmos]{};
+\end{circuitikz}\end{LTXexample}
 
 If you prefer a different position of the arrows in transistors and FETs, you can adjust them like this (it works for the other BJT-based transistors, too):
 \begin{LTXexample}[varwidth=true]
@@ -1648,26 +1668,26 @@ Borsche. Use the package options \texttt{fetsolderdot}/\texttt{nofetsolderdot} t
 
 
 \begin{groupdesc}
-    \circuitdesc{nfet}{\scshape nfet}{}
-    \circuitdesc{nigfete}{\scshape nigfete}{}
-    \circuitdesc{nigfete,solderdot}{\scshape nigfete}{}
-    \circuitdesc{nigfetebulk}{\scshape nigfetebulk}{}
-    \circuitdesc{nigfetd}{\scshape nigfetd}{}
-    \circuitdesc{pfet}{\scshape pfet}{}
-    \circuitdesc{pigfete}{\scshape pigfete}{}
-    \circuitdesc{pigfetebulk}{\scshape pigfetebulk}{}
-    \circuitdesc{pigfetd}{\scshape pigfetd}{}
+    \circuitdesc{nfet}{nfet}{}
+    \circuitdesc{nigfete}{nigfete}{}
+    \circuitdesc{nigfete,solderdot}{nigfete}{}
+    \circuitdesc{nigfetebulk}{nigfetebulk}{}
+    \circuitdesc{nigfetd}{nigfetd}{}
+    \circuitdesc{pfet}{pfet}{}
+    \circuitdesc{pigfete}{pigfete}{}
+    \circuitdesc{pigfetebulk}{pigfetebulk}{}
+    \circuitdesc{pigfetd}{pigfetd}{}
 \end{groupdesc}
 
 \textsc{njfet} and \textsc{pjfet} have been incorporated based on code provided by Danilo Piazzalunga:
 \begin{groupdesc}
-    \circuitdesc{njfet}{\scshape njfet}{}
-    \circuitdesc{pjfet}{\scshape pjfet}{}
+    \circuitdesc{njfet}{njfet}{}
+    \circuitdesc{pjfet}{pjfet}{}
 \end{groupdesc}
 
 \textsc{isfet}
 \begin{groupdesc}
-    \circuitdesc{isfet}{\scshape isfet}{}
+    \circuitdesc{isfet}{isfet}{}
 \end{groupdesc}
 
 \subsubsection{Transistors anchors}
@@ -1786,9 +1806,15 @@ Electronic tubes, also known as vacuum tubes, control current flow between elect
 
 \begin{groupdesc}
 	\circuitdesc*{diodetube}{Tube Diode}{}(anode/90/0.2, cathode/-90/0.2 )
-	\circuitdesc*{triode}{Triode}{}(anode/90/0.2, cathode/-90/0.2, grid/180/0.2 )
-	\circuitdesc*{tetrode}{Tetrode}{}(anode/90/0.2, cathode/-90/0.2, grid/190/0.2,screen/170/0.2 )
-	\circuitdesc*{pentode}{Pentode}{}(anode/90/0.2, cathode/-90/0.2, grid/190/0.2,screen/180/0.2,suppressor/170/0.2 )
+	\circuitdesc*{triode}{Triode}{}(anode/90/0.2, cathode/-90/0.2, control/180/0.2 )
+	\circuitdesc*{tetrode}{Tetrode}{}(anode/90/0.2, cathode/-90/0.2, control/190/0.2,screen/170/0.2 )
+	\circuitdesc*{pentode}{Pentode}{}(anode/90/0.2, cathode/-90/0.2, control/190/0.2,screen/180/0.2,suppressor/170/0.2 )
+\end{groupdesc}
+
+Some pentodes have the suppressor grid internally connected to the control grid, which saves a pin on the tube's housing.
+
+\begin{groupdesc}
+	\circuitdesc*{pentode suppressor to cathode}{Pentode with suppressor grid connected to cathode}{} ( anode/90/0.2, cathode/-90/0.2, control/190/0.2,screen/180/0.2 )
 \end{groupdesc}
 
 Note that the \verb|diodetube| is used as component name to avoid clashes with the semiconductor diode.
@@ -1854,7 +1880,7 @@ Example triode amplifier:
                 to[C=$C_i$] ++(2,0) node (Rg) {}
                 to[R=$R_g$] (Rg |- start)
 (Rg)            to[short,*-] ++(1,0)
-                node[triode,anchor=grid] (Tri) {} ++(2,0)
+                node[triode,anchor=control] (Tri) {} ++(2,0)
 (Tri.cathode)   to[R=$R_c$,-*] (Tri.cathode |- start)
 (Tri.anode)     to [R=$R_a$] ++(0,2)
                 to [short] ++(3.5,0) node(Vatop) {}
@@ -1875,7 +1901,7 @@ Example triode amplifier:
                 to[C=$C_i$] ++(2,0) node (Rg) {}
                 to[R=$R_g$] (Rg |- start)
 (Rg)            to[short,*-] ++(1,0)
-                node[triode,anchor=grid] (Tri) {} ++(2,0)
+                node[triode,anchor=control] (Tri) {} ++(2,0)
 (Tri.cathode)   to[R=$R_c$,-*] (Tri.cathode |- start)
 (Tri.anode)     to [R=$R_a$] ++(0,2)
                 to [short] ++(3.5,0) node(Vatop) {}
@@ -3287,13 +3313,14 @@ From version 0.9.0 onward, the maintainers agreed a new policy for the direction
 \begin{itemize}
     \item \texttt{oldvoltagedirection}, or the key style \texttt{voltage dir=old}: Use old way of voltage direction having a difference between european and american direction, with wrong default labelling for batteries (it was the default before version 0.5);
     \item \texttt{nooldvoltagedirection}, or the key style \texttt{voltage dir=noold}: The standard from version 0.5 onward, utilize the (German?) standard of voltage arrows in the  direction of electric fields (without fixing batteries);
-    \item \texttt{RPvoltages} (meaning Rising Potential voltages), or the key style \texttt{voltage dir=RP}: the arrow is in direction of rising potential, like in \texttt{oldvoltagedirections}, but batteries and current sources are fixed so that they follow the passive/active standard: the default direction of \texttt{v} and \texttt{i} are chosen so that, when both values are positive:
+    \item \texttt{RPvoltages} (meaning Rising Potential voltages), or the key style \texttt{voltage dir=RP}: the arrow is in direction of rising potential, like in \texttt{oldvoltagedirection}, but batteries and current sources are fixed so that they follow the passive/active standard: the default direction of \texttt{v} and \texttt{i} are chosen so that, when both values are positive:
         \begin{itemize}
             \item in passive component, the element is \emph{dissipating power};
             \item in active components (generators), the element is \emph{generating power}.
         \end{itemize}
-    \item \texttt{EFvoltages} (meaning Electric Field voltages), or the key style \texttt{voltage dir=EF}: the arrow is in direction of the electric field, like in \texttt{nooldvoltagedirections}, but batteries are fixed;
+    \item \texttt{EFvoltages} (meaning Electric Field voltages), or the key style \texttt{voltage dir=EF}: the arrow is in direction of the electric field, like in \texttt{nooldvoltagedirection}, but batteries are fixed;
 \end{itemize}
+Notice that the four styles are designed to be used at the environment level: that is, you should use them at the start of your environment as in \verb|\begin{circuitikz}[voltage dir=old] ...| and not as a key for single components, in which case the behaviour is not guaranteed.
 
 The standard direction of currents, flows and voltages are changed by these options; notice that the default drops in case of passive and active elements is normally different. Take care that in the case of \texttt{noold} and \texttt{EFvoltages} also the currents can switch directions. It is much easier to understand the several behaviors by looking at the following examples, that have been generated by the code:
 
@@ -3718,7 +3745,7 @@ This could be especially useful if you define a style, to use like this:
 \tikz \draw (0,0) to[C, i=$\imath$] (2,0);
 \end{LTXexample}
 
-\noindent However, you can override the properties \verb!voltage/distance from node!\footnote{That is, how distant from the initial and final points of the path the arrow starts and ends.}, \verb!voltage/bump b!\footnote{Controlling how high the bump of the arrow is --- how curved it is.} and \verb!voltage/european label distance!\footnote{Controlling how distant from the bipole the voltage label will be.} on a per-component basis, in order to fine-tune the voltages:
+\noindent However, you can override the properties \texttt{voltage/distance from node}\footnote{That is, how distant from the initial and final points of the path the arrow starts and ends.}, \texttt{voltage/bump b}\footnote{Controlling how high the bump of the arrow is --- how curved it is.} and \texttt{voltage/european label distance}\footnote{Controlling how distant from the bipole the voltage label will be.} on a per-component basis, in order to fine-tune the voltages:
 
 \begin{LTXexample}[varwidth=true]
 \tikz \draw (0,0) to[R, v=1<\volt>] (1.5,0)
@@ -3761,7 +3788,7 @@ These bipole nodes are added after the path is drawn, as every node in Ti\emph{k
 \end{circuitikz}
 \end{LTXexample}
 
-You can define shortcuts for the \texttt{bipole bodes} you use most; for example if you want a shortcut for a bipole with open square node in red in the right side you can:
+You can define shortcuts for the \texttt{bipole nodes} you use most; for example if you want a shortcut for a bipole with open square node in red in the right side you can:
 
 \begin{LTXexample}[varwidth=true,
         basicstyle=\small\ttfamily

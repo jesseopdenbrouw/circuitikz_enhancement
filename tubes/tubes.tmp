@@ -1,0 +1,7 @@
+\ctikzset{tubes/width=1.4}
+\ctikzset{tubes/height=1}
+
+\begin{circuitikz}
+\draw (0,0) node[triode] (Tri) {};
+\draw  (Tri.east) node[right] {12AX7};
+\end{circuitikz}

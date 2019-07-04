@@ -51,9 +51,10 @@
 
 
 %%%\input{tubes-circuitikz.tex}
-%%\makeatletter
-%%\input{pgfcirctripoles.tex}
-%%\makeatother
+\makeatletter
+\input{pgfcirc.defines.tex}
+\input{pgfcirctripoles.tex}
+\makeatother
 
 \begin{document}
 %\maketitle
@@ -64,15 +65,15 @@
 
 \begin{groupdesc}
 	\circuitdesc*{diodetube}{Tube Diode}{} ( anode/90/0.2, cathode/-90/0.2 )
-	\circuitdesc*{triode}{Triode}{} ( anode/90/0.2, cathode/-90/0.2, grid/180/0.2 )
-	\circuitdesc*{tetrode}{Tetrode}{} ( anode/90/0.2, cathode/-90/0.2, grid/190/0.2,screen/170/0.2 )
-	\circuitdesc*{pentode}{Pentode}{} ( anode/90/0.2, cathode/-90/0.2, grid/190/0.2,screen/180/0.2,suppressor/170/0.2 )
+	\circuitdesc*{triode}{Triode}{} ( anode/90/0.2, cathode/-90/0.2, control/180/0.2 )
+	\circuitdesc*{tetrode}{Tetrode}{} ( anode/90/0.2, cathode/-90/0.2, control/190/0.2,screen/170/0.2 )
+	\circuitdesc*{pentode}{Pentode}{} ( anode/90/0.2, cathode/-90/0.2, control/190/0.2,screen/180/0.2,suppressor/170/0.2 )
 \end{groupdesc}
 
 Some pentodes have the suppressor grid internally connected to the control grid, which saves a pin on the tube's housing.
 
 \begin{groupdesc}
-	\circuitdesc*{pentode suppressor to cathode}{Pentode with suppressor grid connected to cathode}{} ( anode/90/0.2, cathode/-90/0.2, grid/190/0.2,screen/180/0.2 )
+	\circuitdesc*{pentode suppressor to cathode}{Pentode with suppressor grid connected to cathode}{} ( anode/90/0.2, cathode/-90/0.2, control/190/0.2,screen/180/0.2 )
 \end{groupdesc}
 
 Normally, the filament is not drawn. If you want a filament, put the \verb|filament| option in the node description:
@@ -114,13 +115,13 @@ Example triode amplifier:
                 to[C=$C_i$] ++(2,0) node (Rg) {}
                 to[R=$R_g$] (Rg |- start)
 (Rg)            to[short,*-] ++(1,0)
-                node[triode,anchor=grid] (Tri) {} ++(2,0)
+                node[triode,anchor=control] (Tri) {} ++(2,0)
 (Tri.cathode)   to[R=$R_c$,-*] (Tri.cathode |- start)
 (Tri.anode)     to [R=$R_a$] ++(0,2)
                 to [short] ++(3.5,0) node(Vatop) {}
                 to [V<=$V_a$] (Vatop |- start)
                 to [short] (start)
-(Tri.anode)     ++(0,0.2) to[C=$C_o$,*-o] ++(2,0)
+(Tri.anode)     ++(0,0.2) to[C=$C_a$,*-o] ++(2,0)
 (Tri.cathode)   ++(0,-0.2) to[short,*-] ++(1.5,0) node(Cctop) {}
                 to[C=$C_c$,-*] (start -| Cctop)
 ;
@@ -135,13 +136,13 @@ Example triode amplifier:
                 to[C=$C_i$] ++(2,0) node (Rg) {}
                 to[R=$R_g$] (Rg |- start)
 (Rg)            to[short,*-] ++(1,0)
-                node[triode,anchor=grid] (Tri) {} ++(2,0)
+                node[triode,anchor=control] (Tri) {} ++(2,0)
 (Tri.cathode)   to[R=$R_c$,-*] (Tri.cathode |- start)
 (Tri.anode)     to [R=$R_a$] ++(0,2)
                 to [short] ++(3.5,0) node(Vatop) {}
                 to [V<=$V_a$] (Vatop |- start)
                 to [short] (start)
-(Tri.anode)     ++(0,0.2) to[C=$C_o$,*-o] ++(2,0)
+(Tri.anode)     ++(0,0.2) to[C=$C_a$,*-o] ++(2,0)
 (Tri.cathode)   ++(0,-0.2) to[short,*-] ++(1.5,0) node(Cctop) {}
                 to[C=$C_c$,-*] (start -| Cctop)
 ;
